@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-class SteveOffline extends Phaser.Scene
+class GameScene extends Phaser.Scene
 {
     constructor ()
     {
@@ -27,9 +27,10 @@ class SteveOffline extends Phaser.Scene
 
 const config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
-    scene: SteveOffline
+    width: 1280,
+    height: 720,
+    scene: GameScene,
+    backgroundColor: '#000000'
 };
 
 const game = new Phaser.Game(config);

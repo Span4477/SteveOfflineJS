@@ -1,4 +1,5 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: './src/index.js',
@@ -18,6 +19,11 @@ module.exports = {
             // ... more rules for other file types like CSS, images, etc.
         ],
     },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: './src/index.html',
+      }),
+    ],
     devServer: {
         static: path.join(__dirname, 'dist'),
         compress: true,
