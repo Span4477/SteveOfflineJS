@@ -65,6 +65,14 @@ class GameScene extends Phaser.Scene
 
             this.player.setApproach(worldPoint.x, worldPoint.y);
         });
+        
+        // Setup keyboard event listener
+        this.input.keyboard.on('keydown', (event) => {
+            console.log(`Key pressed: ${event.key}`);
+            if (event.key === 's') {
+                this.player.setMoveState('stop');
+            }
+        });
 
     }
 

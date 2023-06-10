@@ -18,9 +18,15 @@ export default class Player extends Ship {
     }
 
     drawApproachLine(fromX, fromY, toX, toY) {
-        this.graphics.beginPath();
         let lineX = fromX + 2 * this.triangleLength * Math.cos(Math.atan2(toY - fromY, toX - fromX));
         let lineY = fromY + 2 * this.triangleLength * Math.sin(Math.atan2(toY - fromY, toX - fromX));
+
+        // do not draw the line if the toX, toY is closer to the ship than the lineX, lineY
+        if (Phaser.Math.Distance.Between(fromX, fromY, toX, toY) < Phaser.Math.Distance.Between(fromX, fromY, lineX, lineY)) {
+            return;
+        }
+
+        this.graphics.beginPath();
         this.graphics.moveTo(lineX, lineY);
         this.graphics.lineTo(toX, toY);
         this.graphics.strokePath();
@@ -76,14 +82,21 @@ export default class Player extends Ship {
         this.approach.y = y;
     }
 
+    setMoveState(state) {
+        this.moveState = state;
+    }
+
     updateMovementState() {
 
-        if (this.moveState = 'approach') {
+        if (this.moveState == 'approach') {
             let distance = Phaser.Math.Distance.Between(this.position.x, this.position.y, this.approach.x, this.approach.y);
             if (distance < 500) {
                 this.moveState = 'stop';
                 this.approachText.setVisible(false);
             }
+        } else if (this.moveState == 'stop') {
+            
+            this.approachText.setVisible(false);
         }
     }
 
