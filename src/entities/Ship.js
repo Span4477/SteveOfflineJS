@@ -1,8 +1,8 @@
 import Entity from './Entity.js';
 
 export default class Ship extends Entity {
-    constructor(scene, x, y, key) {
-        super(scene, x, y, key, 'Ship');
+    constructor(scene, x, y) {
+        super(scene, x, y, 'Ship');
 
         // Custom properties for ship
         // e.g., this.speed = 100;

@@ -4,6 +4,7 @@ import Phaser from 'phaser';
 import StarField from './scenes/StarField';
 import ScreenToWorld from './ui/ScreenToWorld';
 import GridLines from './ui/GridLines';
+import Player from './entities/Player';
 
 class GameScene extends Phaser.Scene
 {
@@ -44,6 +45,9 @@ class GameScene extends Phaser.Scene
                 this.screenToWorld.zoomIn();
             }
         });
+
+        // Place the player at the center of the screen
+        this.player = new Player(this, this.screenToWorld, 0, 0);
     }
 
     update ()
@@ -51,6 +55,7 @@ class GameScene extends Phaser.Scene
         // Here goes the game logic that needs to run every frame
 
         this.gridLines.draw(this.screenToWorld);
+        this.player.update();
         
     }
 

@@ -50,10 +50,9 @@ export default class GridLines {
         // Draw circles and update distance texts
         this.distances.forEach((distance, i) => {
             // Convert the distance from world units to screen units
-            let worldDistance = screenToWorld.toWorldCoordinates(distance, 0).x;
+            let worldDistance = screenToWorld.toWorldDistance(distance);
 
             // Draw the dashed circle
-            // this.graphics.strokeCircle(this.scene.game.config.width / 2, this.scene.game.config.height / 2, distance);
             this.strokeDashedCircle(this.scene.game.config.width / 2, this.scene.game.config.height / 2, distance, 5, 5)
 
             // Update the position and text of the distance label

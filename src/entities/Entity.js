@@ -1,21 +1,28 @@
 import Phaser from 'phaser';
 
-export default class Entity extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y, key, type) {
-        super(scene, x, y, key);
+export default class Entity extends Phaser.GameObjects.GameObject {
+    constructor(scene, x, y, type) {
+        super(scene, "Entity");
 
         this.scene = scene;
         this.type = type;
 
-        // Add this entity to the existing scene
-        this.scene.add.existing(this);
         
-        // Enable physics for movement
-        this.scene.physics.world.enableBody(this, 0);
+        // Initialize position and velocity
+        this.position = new Phaser.Math.Vector2(x, y);
+        this.velocity = new Phaser.Math.Vector2(0, 0);
     }
 
     update() {
         // Can be overridden by subclasses
+    }
+    
+    // Update the position based on velocity
+    preUpdate(time, delta) {
+        super.preUpdate(time, delta);
+
+        this.position.x += this.velocity.x * delta / 1000;
+        this.position.y += this.velocity.y * delta / 1000;
     }
 
     // ... more methods and properties as needed
