@@ -5,6 +5,7 @@ import StarField from './scenes/StarField';
 import ScreenToWorld from './ui/ScreenToWorld';
 import GridLines from './ui/GridLines';
 import Player from './entities/Player';
+import StatusBars from './ui/StatusBars';
 
 class GameScene extends Phaser.Scene
 {
@@ -45,9 +46,23 @@ class GameScene extends Phaser.Scene
                 this.screenToWorld.zoomIn();
             }
         });
+        
+        // Set an input event listener
+        this.input.on('pointerdown', (pointer) => {
+            const screenX = pointer.x;
+            const screenY = pointer.y;
+            
+            const worldPoint = this.screenToWorld.toWorldCoordinates(screenX, screenY);
+            
+            console.log(`Screen coordinates: (${screenX}, ${screenY})`);
+            console.log(`Game coordinates: (${worldPoint.x}, ${worldPoint.y})`);
+        });
 
         // Place the player at the center of the screen
         this.player = new Player(this, this.screenToWorld, 0, 0);
+
+        // Create the status bars
+        this.statusBars = new StatusBars(this, this.player);
     }
 
     update ()
@@ -56,6 +71,9 @@ class GameScene extends Phaser.Scene
 
         this.gridLines.draw(this.screenToWorld);
         this.player.update();
+
+        // Update the statusBars
+        this.statusBars.update();
         
     }
 
