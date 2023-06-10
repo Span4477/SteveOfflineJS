@@ -36,6 +36,12 @@ class GameScene extends Phaser.Scene
 
         this.gridLines = new GridLines(this);
         
+        // Place the player at the center of the screen
+        this.player = new Player(this, this.screenToWorld, 0, 0);
+
+        // Create the status bars
+        this.statusBars = new StatusBars(this, this.player);
+        
         // Listen for wheel events
         this.input.on('wheel', (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
             if (deltaY > 0) {
@@ -56,13 +62,10 @@ class GameScene extends Phaser.Scene
             
             console.log(`Screen coordinates: (${screenX}, ${screenY})`);
             console.log(`Game coordinates: (${worldPoint.x}, ${worldPoint.y})`);
+
+            this.player.setApproach(worldPoint.x, worldPoint.y);
         });
 
-        // Place the player at the center of the screen
-        this.player = new Player(this, this.screenToWorld, 0, 0);
-
-        // Create the status bars
-        this.statusBars = new StatusBars(this, this.player);
     }
 
     update ()

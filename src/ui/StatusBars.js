@@ -28,6 +28,20 @@ export default class StatusBars {
             strokeThickness: 1
 
         }
+
+        
+        for (let i = 0; i < this.attributes.length; i++) {
+            
+            let attribute = this.attributes[i];
+            let barWidth = this.width;
+            let barX = this.x + (barWidth + this.barGap) * i;
+            let barY = this.y;
+            // Draw the text for the bar, rotated 90 degrees counter-clockwise
+            // Capitolize the first letter of the attribute
+            let label = attribute.charAt(0).toUpperCase() + attribute.slice(1);
+            this.scene.add.text(barX - barWidth / 2, barY - this.height / 2, label, this.fontAttributes).setOrigin(0.5, 0.5).setAngle(-90);
+        }
+
         
     }
 
@@ -45,10 +59,6 @@ export default class StatusBars {
             this.graphics.fillRect(barX, barY, barWidth, barHeight);
             // Draw a box outlining the bar
             this.graphics.strokeRect(barX, barY, barWidth, -this.height);
-            // Draw the text for the bar, rotated 90 degrees counter-clockwise
-            // Capitolize the first letter of the attribute
-            let label = attribute.charAt(0).toUpperCase() + attribute.slice(1);
-            this.scene.add.text(barX - barWidth / 2, barY - this.height / 2, label, this.fontAttributes).setOrigin(0.5, 0.5).setAngle(-90);
         }
         
     }
