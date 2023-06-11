@@ -19,7 +19,7 @@ class GameScene extends Phaser.Scene
     {
         // Here you can preload assets, like images or audio files
         // this.load.image('logo', 'assets/logo.png');
-        
+        this.load.image('thrust', 'assets/thrust.png');
 
     }
 
@@ -35,7 +35,7 @@ class GameScene extends Phaser.Scene
         this.starField = new StarField(this, 1);
 
         this.gridLines = new GridLines(this);
-        
+
         // Place the player at the center of the screen
         this.player = new Player(this, this.screenToWorld, 0, 0);
 

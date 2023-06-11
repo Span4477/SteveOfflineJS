@@ -19,6 +19,51 @@ export default class Ship extends Entity {
         this.maxSpeed = 500;
         this.approach = new Phaser.Math.Vector2(x, y);
         this.inertiaModifier = 5;
+
+        
+        this.thrustParticle = {
+            speed: {min: 10, max: 20},
+            lifespan: 5000,
+            scale: {start: 1, end: 0},
+            emitting: false
+        }
+
+        this.thrustEmitter = this.scene.add.particles(
+            0,
+            0,
+            'thrust',
+            this.thrustParticle
+        );
+        
+    }
+
+    
+
+    emitThrust() {
+        if (this.speed == 0) {
+            return;
+        }
+        
+        const angle = Math.atan2(this.velocity.y, this.velocity.x) + Math.PI;
+        const speed = this.velocity.length();
+        let x = this.position.x + 100 * Math.cos(angle);
+        let y = this.position.y + 100 * Math.sin(angle);
+        let screenCoords = this.screenToWorld.toScreenCoordinates(x, y);
+        x = screenCoords.x;
+        y = screenCoords.y;
+
+        // Get a random number
+        let randomAngle = Math.random() * 20 - 10;
+        let randomSpeed = Math.random() * 10 - 5;
+        
+        // set angle of the thrust emitter
+        // this.thrustEmitter.setAngle(angle * 180 / Math.PI + randomAngle);
+        
+
+        this.thrustEmitter.setPosition(x, y);
+        this.thrustEmitter.emitParticle(1);
+
+        
         
     }
 

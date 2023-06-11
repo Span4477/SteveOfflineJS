@@ -66,7 +66,6 @@ export default class Player extends Ship {
         this.graphics.lineTo(x3, y3);
         this.graphics.lineTo(x1, y1);
 
-
         this.graphics.strokePath();
         this.graphics.closePath();
     }
@@ -136,6 +135,7 @@ export default class Player extends Ship {
         this.setSpeed();
         this.updateMovementState(delta);
         this.move(delta);
+        
 
         this.scene.screenToWorld.centerOnPlayer(this.position.x, this.position.y);
 
