@@ -63,4 +63,12 @@ export default class ScreenToWorld {
     toScreenDistance(worldDistance) {
         return worldDistance * this.scaleFactor;
     }
+
+    centerOnPlayer(playerX, playerY) {
+        // Center the screen on the player
+
+        this.worldOffsetX = playerX + this.screenWidth / this.scaleFactor / 2;
+        this.worldOffsetY = playerY + this.screenHeight / this.scaleFactor / 2;
+        
+    }
 }

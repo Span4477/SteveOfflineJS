@@ -121,7 +121,8 @@ export default class Player extends Ship {
         this.updateMovementState(delta);
         this.move(delta);
 
-        
+        this.scene.screenToWorld.centerOnPlayer(this.position.x, this.position.y);
+
         this.draw();
 
     }
