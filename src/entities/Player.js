@@ -53,33 +53,18 @@ export default class Player extends Ship {
         if (this.speed != 0) {
             let newTheta = Math.atan2(this.velocity.y, this.velocity.x);
             this.thetaTriangle += Math.min(Math.abs(newTheta - this.thetaTriangle), 0.1) * Math.sign(newTheta - this.thetaTriangle);
-            let x1 = x + this.triangleLength * Math.cos(this.thetaTriangle);
-            let x2 = x + this.triangleLength * Math.cos(this.thetaTriangle + 2 * Math.PI / 3);
-            let x3 = x + this.triangleLength * Math.cos(this.thetaTriangle + 4 * Math.PI / 3);
-            let y1 = y + this.triangleLength * Math.sin(this.thetaTriangle);
-            let y2 = y + this.triangleLength * Math.sin(this.thetaTriangle + 2 * Math.PI / 3);
-            let y3 = y + this.triangleLength * Math.sin(this.thetaTriangle + 4 * Math.PI / 3);
-
-            this.graphics.moveTo(x1, y1);
-            this.graphics.lineTo(x2, y2);
-            this.graphics.lineTo(x3, y3);
-            this.graphics.lineTo(x1, y1);
-
-        } else {
-            
-            let x1 = x + this.triangleLength * Math.cos(this.thetaTriangle);
-            let x2 = x + this.triangleLength * Math.cos(this.thetaTriangle + 2 * Math.PI / 3);
-            let x3 = x + this.triangleLength * Math.cos(this.thetaTriangle + 4 * Math.PI / 3);
-            let y1 = y + this.triangleLength * Math.sin(this.thetaTriangle);
-            let y2 = y + this.triangleLength * Math.sin(this.thetaTriangle + 2 * Math.PI / 3);
-            let y3 = y + this.triangleLength * Math.sin(this.thetaTriangle + 4 * Math.PI / 3);
-
-            this.graphics.moveTo(x1, y1);
-            this.graphics.lineTo(x2, y2);
-            this.graphics.lineTo(x3, y3);
-            this.graphics.lineTo(x1, y1);
-
         }
+        let x1 = x + this.triangleLength * Math.cos(this.thetaTriangle);
+        let x2 = x + this.triangleLength * Math.cos(this.thetaTriangle + 2 * Math.PI / 3);
+        let x3 = x + this.triangleLength * Math.cos(this.thetaTriangle + 4 * Math.PI / 3);
+        let y1 = y + this.triangleLength * Math.sin(this.thetaTriangle);
+        let y2 = y + this.triangleLength * Math.sin(this.thetaTriangle + 2 * Math.PI / 3);
+        let y3 = y + this.triangleLength * Math.sin(this.thetaTriangle + 4 * Math.PI / 3);
+
+        this.graphics.moveTo(x1, y1);
+        this.graphics.lineTo(x2, y2);
+        this.graphics.lineTo(x3, y3);
+        this.graphics.lineTo(x1, y1);
 
 
         this.graphics.strokePath();
