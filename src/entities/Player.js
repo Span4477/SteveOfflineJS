@@ -76,6 +76,7 @@ export default class Player extends Ship {
 
     }
 
+
     setApproach(x, y) {
         this.moveState = 'approach';
         this.approach.x = x;
@@ -86,25 +87,41 @@ export default class Player extends Ship {
         this.moveState = state;
     }
 
-    updateMovementState() {
+    updateMovementState(delta) {
 
         if (this.moveState == 'approach') {
             let distance = Phaser.Math.Distance.Between(this.position.x, this.position.y, this.approach.x, this.approach.y);
             if (distance < 500) {
                 this.moveState = 'stop';
+                this.stop();
                 this.approachText.setVisible(false);
             }
+            this.accelerate(delta);
+            
         } else if (this.moveState == 'stop') {
             
             this.approachText.setVisible(false);
+            this.stop();
+            this.accelerate(delta);
         }
+        
     }
 
+    move(delta) {
+        this.position.x += this.velocity.x * delta / 1000;
+        this.position.y += this.velocity.y * delta / 1000;
+    }
 
     update() {
+        let delta = this.scene.game.loop.delta;
         // Update position and velocity based on your game's mechanics
-        this.updateCapacitor(this.scene.game.loop.delta);
-        this.updateMovementState();
+        this.updateCapacitor(delta);
+
+        this.setSpeed();
+        this.updateMovementState(delta);
+        this.move(delta);
+
+        
         this.draw();
 
     }
