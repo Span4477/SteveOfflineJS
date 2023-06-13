@@ -19,53 +19,18 @@ export default class Ship extends Entity {
         this.maxSpeed = 500;
         this.approach = new Phaser.Math.Vector2(x, y);
         this.inertiaModifier = 5;
+        this.warpAgility = 5
+        this.warpSpeedAU = 1;
+        this.capacitorToWarp = 25;
+        this.moveState = 'stop';
 
         
-        this.thrustParticle = {
-            speed: {min: 10, max: 20},
-            lifespan: 5000,
-            scale: {start: 1, end: 0},
-            emitting: false
-        }
-
-        this.thrustEmitter = this.scene.add.particles(
-            0,
-            0,
-            'thrust',
-            this.thrustParticle
-        );
-        
+        this.warpStartX = 0;
+        this.warpStartY = 0;
+        this.warpDuration = 0;
     }
 
     
-
-    emitThrust() {
-        if (this.speed == 0) {
-            return;
-        }
-        
-        const angle = Math.atan2(this.velocity.y, this.velocity.x) + Math.PI;
-        const speed = this.velocity.length();
-        let x = this.position.x + 100 * Math.cos(angle);
-        let y = this.position.y + 100 * Math.sin(angle);
-        let screenCoords = this.screenToWorld.toScreenCoordinates(x, y);
-        x = screenCoords.x;
-        y = screenCoords.y;
-
-        // Get a random number
-        let randomAngle = Math.random() * 20 - 10;
-        let randomSpeed = Math.random() * 10 - 5;
-        
-        // set angle of the thrust emitter
-        // this.thrustEmitter.setAngle(angle * 180 / Math.PI + randomAngle);
-        
-
-        this.thrustEmitter.setPosition(x, y);
-        this.thrustEmitter.emitParticle(1);
-
-        
-        
-    }
 
     updateCapacitor(delta) {
         // Update the capacitor
@@ -99,18 +64,184 @@ export default class Ship extends Entity {
         this.speed = this.velocity.length();
     }
 
-    getMaxSpeed() {
-        return this.maxSpeed;
-    }
-
-    setMaxSpeed() {
-        return;
-    }
-
+    
     stop() {
         
         this.approach.x = this.position.x;
         this.approach.y = this.position.y;
+    }
+
+    startWarp(delta) {
+        //Check if we are at least 75% of max speed
+        if (this.speed < 0.75 * this.maxSpeed) {
+            this.accelerate(delta);
+            return;
+        }
+
+        // Check if we have enough capacitor
+        if (this.capacitor < this.capacitorToWarp) {
+            this.accelerate(delta);
+            return;
+        }
+
+        // Ensure that the distance is at least 150km
+        let distance = Phaser.Math.Distance.Between(this.position.x, this.position.y, this.approach.x, this.approach.y);
+        if (distance < 150000) {
+            this.accelerate(delta);
+            return;
+        }
+
+        // Check if the direction of the velocity is within 20 degrees of the approach vector
+        let approachVector = this.approach.clone();
+        // point from ship to approach point
+        approachVector.subtract(this.position);
+        let angle = Math.atan2(this.velocity.y, this.velocity.x);
+        let angleApproach = Math.atan2(approachVector.y, approachVector.x);
+        let angleDiff = Math.abs(angle - angleApproach);
+        if (angleDiff > Math.PI / 9) {
+            this.accelerate(delta);
+            return;
+        }
+
+        // Start warp
+        this.moveState = 'warping'
+        this.capacitor -= this.capacitorToWarp;
+        this.warpStartX = this.position.x;
+        this.warpStartY = this.position.y;
+        this.warpNewtonResult = 0;
+
+
+    }
+
+    warpSpeedFunc(t) {
+        // This is the velocity at time t
+        return Math.exp(t * this.warpAgility) - 1 + this.maxSpeed;
+    }
+
+    warpSpeedFuncInverse(v) {
+        // This is the time to reach velocity v
+        return Math.log(v - this.maxSpeed + 1) / this.warpAgility;
+    }
+
+    warpSpeedFuncIntegrated(t) {
+        // This is the distance at time t
+        return (Math.exp(t * this.warpAgility) - 1) / this.warpAgility + this.maxSpeed * t;
+        
+    }
+
+    warpSpeedFuncIntegratedInverse(d) {
+        // This is the time to reach distance d
+        // This is a numerical approximation using Newton's method
+        const AU = 149597870.7 * 1000;  // Astronomical Unit in meters
+        const warpSpeed = this.warpSpeedAU * AU
+        let iterations = 100;
+        let a = 0
+        let b = this.warpSpeedFuncInverse(warpSpeed);
+        let tol = 1e-3;
+        let c = a;
+        for (let i = 0; i < iterations; i++) {
+            c = (a + b) / 2;
+            let fc = this.warpSpeedFuncIntegrated(c);
+            if (Math.abs(fc - d) < tol) {
+                break;
+            }
+            if (fc > d) {
+                b = c;
+            }
+            if (fc < d) {
+                a = c;
+            }
+            console.log('Err: ' + Math.abs(fc - d));
+        }
+        
+        return c;
+        
+    }
+
+    warp(delta) {
+
+        let t = delta / 1000;  // convert delta from milliseconds to seconds
+        this.warpDuration += t;
+
+        const AU = 149597870.7 * 1000;  // Astronomical Unit in meters
+        const warpSpeed = this.warpSpeedAU * AU
+        // Calculate the total distance from warp start to warp end
+        let distance = Phaser.Math.Distance.Between(this.warpStartX, this.warpStartY, this.approach.x, this.approach.y);
+        // Calculate total distance traveled so far
+        let distanceTraveled = Phaser.Math.Distance.Between(this.warpStartX, this.warpStartY, this.position.x, this.position.y);
+        // Calculate distance remaining
+        let distanceRemaining = distance - distanceTraveled;
+
+        //Time needed to decelerate to maxSpeed
+        let timeToStop = this.warpSpeedFuncInverse(this.speed);
+        //Distance needed to decelerate to maxSpeed
+        let distanceToStop = this.warpSpeedFuncIntegrated(timeToStop);
+
+        //Time needed to accelerate to warp speed
+        let timeToMaxSpeed = this.warpSpeedFuncInverse(warpSpeed);
+        //Distance needed to accelerate to maxSpeed
+        let distanceToMaxSpeed = this.warpSpeedFuncIntegrated(timeToMaxSpeed);
+
+        let theta = Math.atan2(this.approach.y - this.warpStartY, this.approach.x - this.warpStartX);
+        let totalTime = 0
+        if (distanceToMaxSpeed < distance / 2) {
+            // Accelerate to warp speed, then travel at warp speed until it is time to decelerate, then decelerate to approach point
+            totalTime = 2 * timeToMaxSpeed + (distance - 2 * distanceToMaxSpeed) / warpSpeed;
+            if (this.warpDuration < timeToMaxSpeed) {
+                // Accelerate
+                this.speed = this.warpSpeedFunc(this.warpDuration);
+                let d = this.warpSpeedFuncIntegrated(this.warpDuration);
+                this.position.x = this.warpStartX + d * Math.cos(theta);
+                this.position.y = this.warpStartY + d * Math.sin(theta);
+                this.velocity.x = this.speed * Math.cos(theta);
+                this.velocity.y = this.speed * Math.sin(theta);
+            } else if (this.warpDuration < timeToMaxSpeed + (distance - 2 * distanceToMaxSpeed) / warpSpeed) {
+                // Travel at warp speed
+                this.speed = warpSpeed;
+                this.position.x = this.warpStartX + distanceToMaxSpeed * Math.cos(theta) + (this.warpDuration - timeToMaxSpeed) * warpSpeed * Math.cos(theta);
+                this.position.y = this.warpStartY + distanceToMaxSpeed * Math.sin(theta) + (this.warpDuration - timeToMaxSpeed) * warpSpeed * Math.sin(theta);
+                this.velocity.x = warpSpeed * Math.cos(theta);
+                this.velocity.y = warpSpeed * Math.sin(theta);
+            } else {
+                // Decelerate
+                this.speed = this.warpSpeedFunc(totalTime - this.warpDuration);
+                let d = this.warpSpeedFuncIntegrated(totalTime - this.warpDuration);
+                this.position.x = this.warpStartX + distanceToMaxSpeed * Math.cos(theta) + (this.warpDuration - timeToMaxSpeed) * warpSpeed * Math.cos(theta) + d * Math.cos(theta);
+                this.position.y = this.warpStartY + distanceToMaxSpeed * Math.sin(theta) + (this.warpDuration - timeToMaxSpeed) * warpSpeed * Math.sin(theta) + d * Math.sin(theta);
+                this.velocity.x = this.speed * Math.cos(theta);
+                this.velocity.y = this.speed * Math.sin(theta);
+            }
+        } else {
+            // Accelerate to the halfway point, then decelerate
+            if (this.warpNewtonResult == 0) {
+                this.warpNewtonResult = this.warpSpeedFuncIntegratedInverse(distance / 2);
+            }
+            totalTime = 2 * this.warpNewtonResult;
+            if (this.warpDuration < this.warpNewtonResult) {
+                this.speed = this.warpSpeedFunc(this.warpDuration);
+                let d = this.warpSpeedFuncIntegrated(this.warpDuration);
+                this.position.x = this.warpStartX + d * Math.cos(theta);
+                this.position.y = this.warpStartY + d * Math.sin(theta);
+                this.velocity.x = this.speed * Math.cos(theta);
+                this.velocity.y = this.speed * Math.sin(theta);
+            } else {
+                this.speed = this.warpSpeedFunc(totalTime - this.warpDuration);
+                let d = this.warpSpeedFuncIntegrated(totalTime - this.warpDuration);
+                this.position.x = this.warpStartX + distance * Math.cos(theta) - d * Math.cos(theta);
+                this.position.y = this.warpStartY + distance * Math.sin(theta) - d * Math.sin(theta);
+                this.velocity.x = this.speed * Math.cos(theta);
+                this.velocity.y = this.speed * Math.sin(theta);
+            }
+
+        }
+        
+        if (this.warpDuration >= totalTime) {
+            this.moveState = 'stop';
+            this.warpDuration = 0;
+            this.warpNewtonResult = 0;
+        }
+
+        
     }
 
     accelerate(delta) {
@@ -130,7 +261,7 @@ export default class Ship extends Entity {
             approachVector.normalize();
 
             if (this.velocity.x !=0) {
-                let goalX = approachVector.x * this.getMaxSpeed();
+                let goalX = approachVector.x * this.maxSpeed;
                 let timeX = this.velocityFuncInverse(-Math.abs(this.velocity.x), Math.abs(goalX));
                 let newVelocityX = this.velocityFunc(timeX + t, Math.abs(goalX));
                 let velocityDeltaX = -Math.abs(this.velocity.x) - newVelocityX;
@@ -144,7 +275,7 @@ export default class Ship extends Entity {
             }
 
             if (this.velocity.y !=0) {
-                let goalY = approachVector.y * this.getMaxSpeed();
+                let goalY = approachVector.y * this.maxSpeed;
                 let timeY = this.velocityFuncInverse(-Math.abs(this.velocity.y), Math.abs(goalY));
                 let newVelocityY = this.velocityFunc(timeY + t, Math.abs(goalY));
                 let velocityDeltaY = -Math.abs(this.velocity.y) - newVelocityY;
@@ -157,6 +288,8 @@ export default class Ship extends Entity {
             }
             
             
+            this.position.x += this.velocity.x * t;
+            this.position.y += this.velocity.y * t;
             return;
         } else if (approachVector.x == 0 && approachVector.y == 0) {
             // Not moving
@@ -166,8 +299,8 @@ export default class Ship extends Entity {
         // normalize
         approachVector.normalize();
 
-        let goalX = approachVector.x * this.getMaxSpeed();
-        let goalY = approachVector.y * this.getMaxSpeed();
+        let goalX = approachVector.x * this.maxSpeed;
+        let goalY = approachVector.y * this.maxSpeed;
 
         // Do x component of velocity
         if (this.velocity.x < goalX && goalX >= 0) {
@@ -225,6 +358,10 @@ export default class Ship extends Entity {
             let velocityDeltaY = newVelocityY - flipVelocityY;
             this.velocity.y = this.velocity.y - velocityDeltaY;
         }
+
+        
+        this.position.x += this.velocity.x * t;
+        this.position.y += this.velocity.y * t;
 
     }
     update() {

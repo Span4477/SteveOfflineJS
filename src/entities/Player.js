@@ -10,7 +10,6 @@ export default class Player extends Ship {
         // Create the graphics for the player ship
         this.graphics = this.scene.add.graphics({ lineStyle: { color: 0xffffff } });  // White color
 
-        this.moveState = 'stop';
         this.triangleLength = 10;
         
         this.approachText = this.scene.add.text(0, 0, 'Approach', { color: '#ffffff', fontSize: '12px' }).setOrigin(0.5, 0.5);
@@ -81,7 +80,7 @@ export default class Player extends Ship {
 
         // If the moveState is 'approach', draw a line from the ship to the approach point.
         // The start of the line should be offset from the ship
-        if (this.moveState === 'approach') {
+        if (this.moveState === 'approach' || this.moveState === 'warping' || this.moveState === 'startWarp') {
             let approachScreenCoords = this.screenToWorld.toScreenCoordinates(this.approach.x, this.approach.y);
 
             this.drawApproachLine(screenCoordinates.x, screenCoordinates.y, approachScreenCoords.x, approachScreenCoords.y);
@@ -93,24 +92,37 @@ export default class Player extends Ship {
 
 
     setApproach(x, y) {
+        if (this.moveState == 'warping') {
+            return;
+        }
+
         this.moveState = 'approach';
         this.approach.x = x;
         this.approach.y = y;
     }
 
     setMoveState(state) {
+        if (this.moveState == 'warping') {
+            console.log('Cannot set move state while warping')
+            return;
+        }
         this.moveState = state;
+    }
+    
+    stopCheck() {
+        
+        let distance = Phaser.Math.Distance.Between(this.position.x, this.position.y, this.approach.x, this.approach.y);
+        if (distance < 500) {
+            this.moveState = 'stop';
+            this.stop();
+            this.approachText.setVisible(false);
+        }
     }
 
     updateMovementState(delta) {
 
         if (this.moveState == 'approach') {
-            let distance = Phaser.Math.Distance.Between(this.position.x, this.position.y, this.approach.x, this.approach.y);
-            if (distance < 500) {
-                this.moveState = 'stop';
-                this.stop();
-                this.approachText.setVisible(false);
-            }
+            this.stopCheck();
             this.accelerate(delta);
             
         } else if (this.moveState == 'stop') {
@@ -118,15 +130,22 @@ export default class Player extends Ship {
             this.approachText.setVisible(false);
             this.stop();
             this.accelerate(delta);
+        } else if (this.moveState == 'startWarp') {
+
+            this.stopCheck();
+            this.startWarp(delta);
+
+        } else if (this.moveState == 'warping') {
+
+            
+
+            this.warp(delta);
+
         }
         
     }
 
-    move(delta) {
-        this.position.x += this.velocity.x * delta / 1000;
-        this.position.y += this.velocity.y * delta / 1000;
-    }
-
+    
     update() {
         let delta = this.scene.game.loop.delta;
         // Update position and velocity based on your game's mechanics
@@ -134,8 +153,6 @@ export default class Player extends Ship {
 
         this.setSpeed();
         this.updateMovementState(delta);
-        this.move(delta);
-        
 
         this.scene.screenToWorld.centerOnPlayer(this.position.x, this.position.y);
 

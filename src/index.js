@@ -72,6 +72,10 @@ class GameScene extends Phaser.Scene
             if (event.key === 's') {
                 this.player.setMoveState('stop');
             }
+            if (event.key === 'w') {
+                
+                this.player.setMoveState('startWarp');
+            }
         });
 
     }

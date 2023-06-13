@@ -45,13 +45,19 @@ export default class StatusBars {
         
     }
 
+
     update() {
+        const AU = 149597870.7 * 1000;  // 1 AU in m
         // Clear the previous frame's graphics
         this.graphics.clear();
         for (let i = 0; i < this.attributes.length; i++) {
             let attribute = this.attributes[i];
             let barWidth = this.width;
-            let barHeight = - this.height * this.player[attribute] / this.player['max' + attribute.charAt(0).toUpperCase() + attribute.slice(1)];;
+
+            let barHeight = - this.height * this.player[attribute] / this.player['max' + attribute.charAt(0).toUpperCase() + attribute.slice(1)];
+            if (attribute == 'speed' && this.player.moveState == 'warping') {
+                barHeight = - this.height * this.speed / this.player.warpSpeed / AU;
+            }
             let barX = this.x + (barWidth + this.barGap) * i;
             let barY = this.y;
 
