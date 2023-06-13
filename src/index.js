@@ -6,6 +6,7 @@ import ScreenToWorld from './ui/ScreenToWorld';
 import GridLines from './ui/GridLines';
 import Player from './entities/Player';
 import StatusBars from './ui/StatusBars';
+import InputHandler from './ui/InputHandler';
 
 class GameScene extends Phaser.Scene
 {
@@ -41,42 +42,17 @@ class GameScene extends Phaser.Scene
 
         // Create the status bars
         this.statusBars = new StatusBars(this, this.player);
+
+        this.inputHandler = new InputHandler(this);
         
         // Listen for wheel events
-        this.input.on('wheel', (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
-            if (deltaY > 0) {
-                // Scroll wheel was moved down, zoom out
-                this.screenToWorld.zoomOut();
-            } else {
-                // Scroll wheel was moved up, zoom in
-                this.screenToWorld.zoomIn();
-            }
-        });
+        this.input.on('wheel', this.inputHandler.handleWheel);
         
         // Set an input event listener
-        this.input.on('pointerdown', (pointer) => {
-            const screenX = pointer.x;
-            const screenY = pointer.y;
-            
-            const worldPoint = this.screenToWorld.toWorldCoordinates(screenX, screenY);
-            
-            console.log(`Screen coordinates: (${screenX}, ${screenY})`);
-            console.log(`Game coordinates: (${worldPoint.x}, ${worldPoint.y})`);
-
-            this.player.setApproach(worldPoint.x, worldPoint.y);
-        });
+        this.input.on('pointerdown', this.inputHandler.handlePointer);
         
         // Setup keyboard event listener
-        this.input.keyboard.on('keydown', (event) => {
-            console.log(`Key pressed: ${event.key}`);
-            if (event.key === 's') {
-                this.player.setMoveState('stop');
-            }
-            if (event.key === 'w') {
-                
-                this.player.setMoveState('startWarp');
-            }
-        });
+        this.input.keyboard.on('keydown', this.inputHandler.handleKeydown);
 
     }
 
