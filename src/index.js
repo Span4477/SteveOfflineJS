@@ -7,6 +7,7 @@ import GridLines from './ui/GridLines';
 import Player from './entities/Player';
 import StatusBars from './ui/StatusBars';
 import InputHandler from './ui/InputHandler';
+import Planet from './entities/Planet';
 
 class GameScene extends Phaser.Scene
 {
@@ -21,19 +22,25 @@ class GameScene extends Phaser.Scene
         // Here you can preload assets, like images or audio files
         // this.load.image('logo', 'assets/logo.png');
         this.load.image('thrust', 'assets/thrust.png');
+        this.load.image('planet1', 'assets/planet1.png');
+        this.load.image('planet2', 'assets/planet2.png');
 
     }
 
     create ()
     {
         // Add your game objects into the scene here
-        // this.add.image(400, 300, 'logo');
 
+        const AU = 149597870700; // 1 AU in meters
         
         // Initialize ScreenToWorld
         this.screenToWorld = new ScreenToWorld(this.game.config.width, this.game.config.height, 10000);
-
+        
         this.starField = new StarField(this, 1);
+        
+        // Create the planets
+        this.planet1 = new Planet(this, 0, 0, 5000000, 'planet1');
+        this.planet2 = new Planet(this, AU, 0, 5000000, 'planet2');
 
         this.gridLines = new GridLines(this);
 
@@ -58,10 +65,15 @@ class GameScene extends Phaser.Scene
 
     update ()
     {
+        this.screenToWorld.update();
+        
         // Here goes the game logic that needs to run every frame
 
         this.gridLines.draw(this.screenToWorld);
         this.player.update();
+
+        this.planet1.update();
+        this.planet2.update();
 
         // Update the statusBars
         this.statusBars.update();
