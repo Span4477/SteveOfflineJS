@@ -43,20 +43,27 @@ export default class ScreenToWorld {
         this.worldHeightInput = this.scaleFactorInput * this.screenHeight;
     }
 
-    backgroundToScreen(worldX, worldY, radius, screenRadius) {
-        // Things that are far away in the distance should move slower than things that are close
-        // console.log(`worldX: ${worldX}, worldY: ${worldY}, radius: ${radius}, screenRadius: ${screenRadius}`)
-        let backToScreen = screenRadius / radius;
+    getBackToScreen(radius, screenRadius) {
+        return screenRadius / radius;
+    }
+
+    getBackToFront(radius, screenRadius) {
+
+        let backToScreen = this.getBackToScreen(radius, screenRadius);
         let screenToFront = this.worldWidth / this.screenWidth;
         let backToFront = backToScreen * screenToFront;
-        let frontToBack = 1 / backToFront;
-        // console.log(`backToScreen: ${backToScreen}, screenToFront: ${screenToFront}, backToFront: ${backToFront}, frontToBack: ${frontToBack}`)
+        return 1 / backToFront;
+
+    }
+
+    backgroundToScreen(worldX, worldY, radius, screenRadius) {
+        // Things that are far away in the distance should move slower than things that are close
+        let frontToBack = this.getBackToFront(radius, screenRadius);
+        let backToScreen = this.getBackToScreen(radius, screenRadius);
 
         let screenX = (worldX - this.worldWidth / 2 * frontToBack + (this.worldWidth / 2 - this.worldOffsetX)) * backToScreen + this.screenWidth;
         let screenY = (worldY - this.worldHeight / 2 * frontToBack + (this.worldHeight / 2 - this.worldOffsetY)) * backToScreen + this.screenHeight;
-        // console.log('(worldY - this.worldOffsetY * frontToBack) * backToScreen: ' + (worldY - this.worldOffsetY * frontToBack) * backToScreen)
-        // console.log(`worldX: ${worldX}, worldY: ${worldY}, radius: ${radius}, screenRadius: ${screenRadius}, screenX: ${screenX}, screenY: ${screenY}`)
-        // console.log(`worldX: ${worldX}, worldY: ${worldY}, screenX: ${screenX}, screenY: ${screenY}`)
+        
         return {x: screenX, y: screenY};
     }
 

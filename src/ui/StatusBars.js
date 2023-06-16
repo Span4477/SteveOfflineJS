@@ -11,6 +11,7 @@ export default class StatusBars {
         this.barGap = 20;
         this.attributes = ['hull', 'armor', 'shield', 'capacitor', 'speed'];
 
+
         // Create the graphics object for the bars
         this.graphics = scene.add.graphics({ fillStyle: { color: 0xffffff } });  // White color
 
@@ -29,6 +30,11 @@ export default class StatusBars {
 
         }
 
+        this.textX = this.x + (this.width + this.barGap) * (this.attributes.length - 0.5) / 2;
+        this.textY = this.y - this.height - 15;
+        this.hoverText = this.scene.add.text(this.textX, this.textY, '', this.fontAttributes);
+        this.hoverText.setOrigin(0.5, 0.5);
+        this.hoverIndex = -1;
         
         for (let i = 0; i < this.attributes.length; i++) {
             
@@ -44,7 +50,30 @@ export default class StatusBars {
 
         
     }
+    numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    toMetricText(x) {
+        let s = '';
+        if (x < 1000) {
+            s = this.numberWithCommas(x.toFixed(0));
+        } else if (x < 1000000) {
+            s = this.numberWithCommas((x / 1000).toFixed(0)) + 'K';
+        } else if (x < 1000000000) {
+            s = this.numberWithCommas((x / 1000000).toFixed(0)) + 'M';
+        } else {
+            s = this.numberWithCommas((x / 1000000000).toFixed(0)) + 'B';
+        }
+        return s;
 
+    }
+    formatHoverTextNumbers(curVal, maxVal) {
+        // use metric system magnitudes to make the numbers more readable
+        // Also use commas to separate thousands
+        
+        return this.toMetricText(curVal) + ' / ' + this.toMetricText(maxVal);
+        
+    }
 
     update() {
         const AU = 149597870.7 * 1000;  // 1 AU in m
@@ -53,18 +82,43 @@ export default class StatusBars {
         for (let i = 0; i < this.attributes.length; i++) {
             let attribute = this.attributes[i];
             let barWidth = this.width;
-
-            let barHeight = - this.height * this.player[attribute] / this.player['max' + attribute.charAt(0).toUpperCase() + attribute.slice(1)];
+            let curVal = this.player[attribute];
+            let maxVal = this.player['max' + attribute.charAt(0).toUpperCase() + attribute.slice(1)];
+            
             if (attribute == 'speed' && this.player.moveState == 'warping') {
-                barHeight = - this.height * this.speed / this.player.warpSpeed / AU;
+                maxVal = this.player.warpSpeedAU * AU;
             }
+
+            let barHeight = - this.height * curVal / maxVal;
             let barX = this.x + (barWidth + this.barGap) * i;
             let barY = this.y;
 
             // Draw the bar
             this.graphics.fillRect(barX, barY, barWidth, barHeight);
-            // Draw a box outlining the bar
+            // Draw a box outlining the bar 
             this.graphics.strokeRect(barX, barY, barWidth, -this.height);
+
+            // Create an interactive rectangle at the position of the bar
+            let barBox = this.scene.add.rectangle(barX, barY, barWidth, this.height);
+            barBox.setOrigin(0, 1);
+            barBox.setInteractive({ useHandCursor: true });
+            // Add a pointerover event listener to the barBox
+            barBox.on('pointerover', () => {
+                // Draw the text for the bar
+                
+                this.hoverIndex = i;
+            });
+            // Add a pointerout event listener to the barBox
+            barBox.on('pointerout', () => {
+                // Remove the text
+                this.hoverText.setText('');
+                this.hoverIndex = -1;
+            });
+            if (i == this.hoverIndex) {
+                // Draw the text for the bar
+                this.hoverText.setText(this.formatHoverTextNumbers(curVal, maxVal));
+            }
+            
         }
         
     }

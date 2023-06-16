@@ -15,9 +15,6 @@ export default class Celestial extends Phaser.GameObjects.Sprite {
 
     update() {
 
-        //TODO make the sprite smaller proportional to the world width
-        
-
         // Update the screen position
         let screenPosition = this.scene.screenToWorld.backgroundToScreen(this.position.x, this.position.y, this.radius, this.screenRadius);
         this.setPosition(screenPosition.x, screenPosition.y);
