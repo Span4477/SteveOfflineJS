@@ -47,13 +47,13 @@ export default class ScreenToWorld {
         // Things that are far away in the distance should move slower than things that are close
         // console.log(`worldX: ${worldX}, worldY: ${worldY}, radius: ${radius}, screenRadius: ${screenRadius}`)
         let backToScreen = screenRadius / radius;
-        let screenToFront = this.worldWidth * 2 / this.screenWidth;
+        let screenToFront = this.worldWidth / this.screenWidth;
         let backToFront = backToScreen * screenToFront;
         let frontToBack = 1 / backToFront;
         // console.log(`backToScreen: ${backToScreen}, screenToFront: ${screenToFront}, backToFront: ${backToFront}, frontToBack: ${frontToBack}`)
 
-        let screenX = (worldX - this.worldOffsetX * frontToBack * 2) * backToScreen + this.screenWidth;
-        let screenY = (worldY - this.worldOffsetY * frontToBack * 2) * backToScreen + this.screenHeight;
+        let screenX = (worldX - this.worldWidth / 2 * frontToBack + (this.worldWidth / 2 - this.worldOffsetX)) * backToScreen + this.screenWidth;
+        let screenY = (worldY - this.worldHeight / 2 * frontToBack + (this.worldHeight / 2 - this.worldOffsetY)) * backToScreen + this.screenHeight;
         // console.log('(worldY - this.worldOffsetY * frontToBack) * backToScreen: ' + (worldY - this.worldOffsetY * frontToBack) * backToScreen)
         // console.log(`worldX: ${worldX}, worldY: ${worldY}, radius: ${radius}, screenRadius: ${screenRadius}, screenX: ${screenX}, screenY: ${screenY}`)
         // console.log(`worldX: ${worldX}, worldY: ${worldY}, screenX: ${screenX}, screenY: ${screenY}`)

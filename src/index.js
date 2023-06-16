@@ -40,7 +40,7 @@ class GameScene extends Phaser.Scene
         
         // Create the planets
         this.planet1 = new Planet(this, 0, 0, 5000000, 'planet1');
-        this.planet2 = new Planet(this, AU, 0, 5000000, 'planet2');
+        this.planet2 = new Planet(this, 5000000, 0, 5000000, 'planet2');
 
         this.gridLines = new GridLines(this);
 

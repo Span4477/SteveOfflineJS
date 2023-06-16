@@ -20,7 +20,6 @@ export default class Celestial extends Phaser.GameObjects.Sprite {
 
         // Update the screen position
         let screenPosition = this.scene.screenToWorld.backgroundToScreen(this.position.x, this.position.y, this.radius, this.screenRadius);
-        // console.log(`Screen position: ${screenPosition.x}, ${screenPosition.y}`)
         this.setPosition(screenPosition.x, screenPosition.y);
 
     }
