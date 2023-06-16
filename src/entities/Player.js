@@ -15,7 +15,7 @@ export default class Player extends Ship {
         this.approachText = this.scene.add.text(0, 0, 'Approach', { color: '#ffffff', fontSize: '12px' }).setOrigin(0.5, 0.5);
         this.approachText.setVisible(false);
 
-        this.thetaTriangle = - Math.PI / 2;
+        this.shipAngle = - Math.PI / 2;
     }
 
     drawApproachLine(fromX, fromY, toX, toY) {
@@ -51,14 +51,14 @@ export default class Player extends Ship {
         this.graphics.beginPath();
         if (this.speed != 0) {
             let newTheta = Math.atan2(this.velocity.y, this.velocity.x);
-            this.thetaTriangle += Math.min(Math.abs(newTheta - this.thetaTriangle), 0.1) * Math.sign(newTheta - this.thetaTriangle);
+            this.shipAngle += Math.min(Math.abs(newTheta - this.shipAngle), 0.1) * Math.sign(newTheta - this.shipAngle);
         }
-        let x1 = x + this.triangleLength * Math.cos(this.thetaTriangle);
-        let x2 = x + this.triangleLength * Math.cos(this.thetaTriangle + 2 * Math.PI / 3);
-        let x3 = x + this.triangleLength * Math.cos(this.thetaTriangle + 4 * Math.PI / 3);
-        let y1 = y + this.triangleLength * Math.sin(this.thetaTriangle);
-        let y2 = y + this.triangleLength * Math.sin(this.thetaTriangle + 2 * Math.PI / 3);
-        let y3 = y + this.triangleLength * Math.sin(this.thetaTriangle + 4 * Math.PI / 3);
+        let x1 = x + this.triangleLength * Math.cos(this.shipAngle);
+        let x2 = x + this.triangleLength * Math.cos(this.shipAngle + 2 * Math.PI / 3);
+        let x3 = x + this.triangleLength * Math.cos(this.shipAngle + 4 * Math.PI / 3);
+        let y1 = y + this.triangleLength * Math.sin(this.shipAngle);
+        let y2 = y + this.triangleLength * Math.sin(this.shipAngle + 2 * Math.PI / 3);
+        let y3 = y + this.triangleLength * Math.sin(this.shipAngle + 4 * Math.PI / 3);
 
         this.graphics.moveTo(x1, y1);
         this.graphics.lineTo(x2, y2);

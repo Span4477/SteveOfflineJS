@@ -56,11 +56,11 @@ export default class StatusBars {
     toMetricText(x) {
         let s = '';
         if (x < 1000) {
-            s = this.numberWithCommas(x.toFixed(0));
+            s = x.toFixed(0);
         } else if (x < 1000000) {
-            s = this.numberWithCommas((x / 1000).toFixed(0)) + 'K';
+            s = (x / 1000).toFixed(0) + 'K';
         } else if (x < 1000000000) {
-            s = this.numberWithCommas((x / 1000000).toFixed(0)) + 'M';
+            s = (x / 1000000).toFixed(0) + 'M';
         } else {
             s = this.numberWithCommas((x / 1000000000).toFixed(0)) + 'B';
         }
@@ -104,8 +104,6 @@ export default class StatusBars {
             barBox.setInteractive({ useHandCursor: true });
             // Add a pointerover event listener to the barBox
             barBox.on('pointerover', () => {
-                // Draw the text for the bar
-                
                 this.hoverIndex = i;
             });
             // Add a pointerout event listener to the barBox

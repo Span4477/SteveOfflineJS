@@ -23,7 +23,8 @@ export default class Ship extends Entity {
         this.warpSpeedAU = 1;
         this.capacitorToWarp = 25;
         this.moveState = 'stop';
-
+        this.name = 'Shipy McShipface';
+        this.dangerLevel = 'low';
         
         this.warpStartX = 0;
         this.warpStartY = 0;
@@ -364,9 +365,7 @@ export default class Ship extends Entity {
         this.position.y += this.velocity.y * t;
 
     }
-    update() {
-        // Implement ship-specific update logic here
-    }
 
-    // ... more methods and properties as needed
+
+    
 }

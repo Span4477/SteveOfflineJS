@@ -8,6 +8,7 @@ export default class Celestial extends Phaser.GameObjects.Sprite {
         console.log('Radius: ' + this.radius)
         
         this.position = new Phaser.Math.Vector2(worldX, worldY);
+        this.name = '';
 
         // Add this object to the scene
         scene.add.existing(this);
