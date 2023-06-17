@@ -24,11 +24,16 @@ export default class Ship extends Entity {
         this.capacitorToWarp = 25;
         this.moveState = 'stop';
         this.name = 'Shipy McShipface';
-        this.dangerLevel = 'low';
+        this.danger = 'low';
         
         this.warpStartX = 0;
         this.warpStartY = 0;
         this.warpDuration = 0;
+
+        
+        this.moveStateInput = this.moveState;
+        this.approachXInput = this.approach.x;
+        this.approachYInput = this.approach.y;
     }
 
     
@@ -105,7 +110,8 @@ export default class Ship extends Entity {
         }
 
         // Start warp
-        this.moveState = 'warping'
+        this.moveState = 'warping';
+        this.moveStateInput = 'warping';
         this.capacitor -= this.capacitorToWarp;
         this.warpStartX = this.position.x;
         this.warpStartY = this.position.y;
@@ -238,6 +244,7 @@ export default class Ship extends Entity {
         
         if (this.warpDuration >= totalTime) {
             this.moveState = 'stop';
+            this.moveStateInput = 'stop';
             this.warpDuration = 0;
             this.warpNewtonResult = 0;
         }

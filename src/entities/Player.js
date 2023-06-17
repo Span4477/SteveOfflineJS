@@ -17,9 +17,6 @@ export default class Player extends Ship {
 
         this.shipAngle = - Math.PI / 2;
         
-        this.moveStateInput = this.moveState;
-        this.approachXInput = this.approach.x;
-        this.approachYInput = this.approach.y;
 
     }
 
@@ -119,6 +116,7 @@ export default class Player extends Ship {
         let distance = Phaser.Math.Distance.Between(this.position.x, this.position.y, this.approach.x, this.approach.y);
         if (distance < 500) {
             this.moveState = 'stop';
+            this.moveStateInput = 'stop';
             this.stop();
             this.approachText.setVisible(false);
         }
