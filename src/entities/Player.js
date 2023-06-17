@@ -16,6 +16,11 @@ export default class Player extends Ship {
         this.approachText.setVisible(false);
 
         this.shipAngle = - Math.PI / 2;
+        
+        this.moveStateInput = this.moveState;
+        this.approachXInput = this.approach.x;
+        this.approachYInput = this.approach.y;
+
     }
 
     drawApproachLine(fromX, fromY, toX, toY) {
@@ -92,21 +97,21 @@ export default class Player extends Ship {
 
 
     setApproach(x, y) {
-        if (this.moveState == 'warping') {
+        if (this.moveStateInput == 'warping') {
             return;
         }
 
-        this.moveState = 'approach';
-        this.approach.x = x;
-        this.approach.y = y;
+        this.moveStateInput = 'approach';
+        this.approachXInput = x;
+        this.approachYInput = y;
     }
 
     setMoveState(state) {
-        if (this.moveState == 'warping') {
+        if (this.moveStateInput == 'warping') {
             console.log('Cannot set move state while warping')
             return;
         }
-        this.moveState = state;
+        this.moveStateInput = state;
     }
     
     stopCheck() {
@@ -122,6 +127,7 @@ export default class Player extends Ship {
     updateMovementState(delta) {
 
         if (this.moveState == 'approach') {
+
             this.stopCheck();
             this.accelerate(delta);
             
@@ -130,6 +136,7 @@ export default class Player extends Ship {
             this.approachText.setVisible(false);
             this.stop();
             this.accelerate(delta);
+
         } else if (this.moveState == 'startWarp') {
 
             this.stopCheck();
@@ -137,16 +144,20 @@ export default class Player extends Ship {
 
         } else if (this.moveState == 'warping') {
 
-            
-
             this.warp(delta);
 
         }
         
     }
 
+    handleInput() {
+        this.moveState = this.moveStateInput;
+        this.approach.x = this.approachXInput;
+        this.approach.y = this.approachYInput;
+    }
     
     update() {
+        this.handleInput();
         let delta = this.scene.game.loop.delta;
         // Update position and velocity based on your game's mechanics
         this.updateCapacitor(delta);

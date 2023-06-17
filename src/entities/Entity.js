@@ -6,6 +6,7 @@ export default class Entity extends Phaser.GameObjects.GameObject {
 
         this.scene = scene;
         this.type = type;
+        this.danger = 'low';
 
         
         // Initialize position and velocity

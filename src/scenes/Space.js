@@ -8,6 +8,7 @@ import StatusBars from '../ui/StatusBars';
 import InputHandler from '../ui/InputHandler';
 import Planet from '../entities/Planet';
 import Enemy from '../entities/Enemy';
+import Overview from '../ui/Overview';
 
 export default class Space extends Phaser.Scene {
     constructor(scene) {
@@ -26,41 +27,38 @@ export default class Space extends Phaser.Scene {
     }
 
     create() {
-
-        // Add your game objects into the scene here
-
-
+        
         const AU = 149597870700; // 1 AU in meters
         
         // Initialize ScreenToWorld
         this.screenToWorld = new ScreenToWorld(this.game.config.width, this.game.config.height, 10000);
         
         this.starField = new StarField(this, 1);
-        
+        this.gridLines = new GridLines(this);
         // Create the planets
         this.planet1 = new Planet(this, 0, 0, 2500000, 'planet1');
         this.planet2 = new Planet(this, AU, 0, 2500000, 'planet2');
 
-        this.gridLines = new GridLines(this);
 
         // Place the player at the center of the screen
         this.player = new Player(this, this.screenToWorld, 0, 0);
 
         // create enemy
-        this.enemy = new Enemy(this, this.screenToWorld, 2000, 100);
+        this.enemy = new Enemy(this, this.screenToWorld, 2000, -800);
+
+        this.overview = new Overview(this, this.screenToWorld);
+        
+        this.overview.addOverviewItem(this.enemy, 'enemy');
+        this.overview.addOverviewItem(this.planet1, 'planet');
+        this.overview.addOverviewItem(this.planet2, 'planet');
 
         // Create the status bars
         this.statusBars = new StatusBars(this, this.player);
 
+        // Create the input handler
         this.inputHandler = new InputHandler(this);
-        
-        // Listen for wheel events
         this.input.on('wheel', this.inputHandler.handleWheel);
-        
-        // Set an input event listener
         this.input.on('pointerdown', this.inputHandler.handlePointer);
-        
-        // Setup keyboard event listener
         this.input.keyboard.on('keydown', this.inputHandler.handleKeydown);
     }
 
@@ -78,6 +76,7 @@ export default class Space extends Phaser.Scene {
 
         // Update the statusBars
         this.statusBars.update();
+        this.overview.update();
 
     }
 

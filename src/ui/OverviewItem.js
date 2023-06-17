@@ -48,26 +48,39 @@ export default class OverviewItem {
         return s;
 
     }
-    getDistanceText() {
-
+    calcDistance() {
         let distance = Phaser.Math.Distance.Between(
             this.gameObject.position.x, 
             this.gameObject.position.y, 
             this.player.position.x, 
             this.player.position.y);
+        return distance;
+    }
+    getDistanceText() {
+
+        let distance = this.calcDistance();
         
-        return this.toMetricText(distance) + ' km';
+        return this.toMetricText(distance) + 'm';
         
     }
-    getVelocityText() {
+    calcVelocity() {
+
         if (this.gameObjectType === 'planet') {
-            return '0 km/s';
+            return 0;
         } else if (this.gameObjectType === 'ship') {
-            return this.toMetricText(this.gameObject.velocity.length()) + ' km/s';
+            return this.gameObject.velocity.length();
         }
+    }
+    getVelocityText() {
+        
+        return this.toMetricText(this.calcVelocity()) + 'm/s';
+        
     }
 
     calculateAngularVelocity() {
+        if (this.gameObjectType === 'planet') {
+            return 0;
+        }
         let pVelX = this.player.velocity.x;
         let pVelY = this.player.velocity.y;
         let oVelX = this.gameObject.velocity.x;

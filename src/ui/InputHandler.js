@@ -19,7 +19,9 @@ export default class InputHandler {
     }
 
     handlePointer(pointer) {
-        
+        if (this.scene.overview.coordInOverview(pointer.x, pointer.y)) {
+            return;
+        }
         const screenX = pointer.x;
         const screenY = pointer.y;
         

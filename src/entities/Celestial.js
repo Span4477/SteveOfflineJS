@@ -9,9 +9,12 @@ export default class Celestial extends Phaser.GameObjects.Sprite {
         
         this.position = new Phaser.Math.Vector2(worldX, worldY);
         this.name = '';
+        this.danger = 'low';
 
         // Add this object to the scene
         scene.add.existing(this);
+
+        
     }
 
     update() {
