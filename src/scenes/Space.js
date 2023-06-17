@@ -47,8 +47,8 @@ export default class Space extends Phaser.Scene {
         this.enemy = new Enemy(this, this.screenToWorld, 2000, -800);
 
         this.overview = new Overview(this, this.screenToWorld);
-        
-        this.overview.addOverviewItem(this.enemy, 'enemy');
+
+        this.overview.addOverviewItem(this.enemy, 'ship');
         this.overview.addOverviewItem(this.planet1, 'planet');
         this.overview.addOverviewItem(this.planet2, 'planet');
 

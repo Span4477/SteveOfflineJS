@@ -14,7 +14,7 @@ export default class Enemy extends Ship {
         
         this.shipAngle = - Math.PI / 2;
 
-        
+        this.name = 'Steve';
     }
 
     drawShip(x, y) {

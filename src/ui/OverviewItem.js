@@ -131,9 +131,9 @@ export default class OverviewItem {
 
     getDangerText() {
         if (this.gameObjectType === 'planet') {
-            return 'low';
+            return this.gameObject.danger;
         } else if (this.gameObjectType === 'ship') {
-            return this.gameObjectType.dangerLevel;
+            return this.gameObject.danger;
         }
     }
     update() {
