@@ -43,6 +43,7 @@ export default class OverviewTable {
         };
 
         this.rowRectangles = [];
+        this.rowHoverIndex = -1;
 
         this.create();
     }
@@ -277,18 +278,14 @@ export default class OverviewTable {
                     let newRect = this.scene.add.rectangle(cellX, cellY, this.cellWidth - 1, this.cellHeight);
                     newRect.setOrigin(0, 0);
                     newRect.setInteractive();
-                    newRect.on('pointerdown', () => {
-                        this.scene.player.setApproach(
-                            item.gameObject.position.x,
-                            item.gameObject.position.y
-                        );
+                    newRect.on('pointerdown', this.onRowClick);
+                    newRect.on('pointerover', () => {
+                        this.rowHoverIndex = i;
                     });
                     this.rowRectangles.push(newRect);
                 } else {
                     // Update the text item
                     this.dataTexts[dataTextIndex].setText(text);
-
-                    
                 }
 
                 cellX += this.cellWidth;
@@ -302,6 +299,16 @@ export default class OverviewTable {
         }
     }
 
+    onRowClick() {
+        // Clicking on a row should set the approach point
+        let item = this.scene.overview.overviewItems[this.scene.overview.table.rowHoverIndex];
+
+        this.scene.player.setApproach(
+            item.gameObject.position.x,
+            item.gameObject.position.y
+        );
+    }
+    
     draw() {
         // Draw the table
         this.graphics.clear();
