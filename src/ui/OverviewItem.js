@@ -36,7 +36,9 @@ export default class OverviewItem {
     }
     toMetricText(x) {
         let s = '';
-        if (x < 1000) {
+        if (x < 1) {
+            s = (x * 1000).toFixed(0) + 'm';
+        } else if (x < 1000) {
             s = x.toFixed(0);
         } else if (x < 1000000) {
             s = (x / 1000).toFixed(0) + 'K';
@@ -95,38 +97,24 @@ export default class OverviewItem {
         let pPos = new Phaser.Math.Vector2(pPosX, pPosY);
         let oPos = new Phaser.Math.Vector2(oPosX, oPosY);
 
-        let pToO = oPos.subtract(pPos);
-        let pToOUnit = pToO.normalize();
-        let pToOAngle = Phaser.Math.RadToDeg(Phaser.Math.Angle.BetweenPoints(pToOUnit, pVel));
-        let oToP = pPos.subtract(oPos);
-        let oToPUnit = oToP.normalize();
-        let oToPAngle = Phaser.Math.RadToDeg(Phaser.Math.Angle.BetweenPoints(oToPUnit, oVel));
+        // Get the component of the ship's velocity that is perpendicular to the vector from the ship to the player
+        let pVelPerp = pVel.clone().project(oPos.clone().subtract(pPos).normalizeRightHand());
+        let oVelPerp = oVel.clone().project(pPos.clone().subtract(oPos).normalizeRightHand());
 
-        let pToOAngleSign = Math.sign(pToOAngle);
-        let oToPAngleSign = Math.sign(oToPAngle);
+        let relativeVelocity = pVelPerp.subtract(oVelPerp);
 
-        let pToOAngleAbs = Math.abs(pToOAngle);
-        let oToPAngleAbs = Math.abs(oToPAngle);
+        let distance = this.calcDistance();
 
-        let angularVelocity = 0;
-
-        if (pToOAngleAbs > oToPAngleAbs) {
-            angularVelocity = pToOAngleSign * (pToOAngleAbs - oToPAngleAbs);
-        }
-        else if (pToOAngleAbs < oToPAngleAbs) {
-            angularVelocity = oToPAngleSign * (oToPAngleAbs - pToOAngleAbs);
-        }
+        let angularVelocity = relativeVelocity.length() / distance;
+        // convert to degrees
+        angularVelocity = angularVelocity * 180 / Math.PI;
 
         return angularVelocity;
     }
 
     
     getAngularVelocityText() {
-        if (this.gameObjectType === 'planet') {
-            return '0 deg/s';
-        } else if (this.gameObjectType === 'ship') {
-            return this.toMetricText(this.calculateAngularVelocity()) + ' deg/s';
-        }
+        return this.toMetricText(this.calculateAngularVelocity()) + 'd/s';
     }
 
     getDangerText() {

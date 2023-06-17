@@ -42,6 +42,8 @@ export default class OverviewTable {
             strokeThickness: 1
         };
 
+        this.rowRectangles = [];
+
         this.create();
     }
     coordInOverview(x, y) {
@@ -189,7 +191,12 @@ export default class OverviewTable {
         // Update the cell values
         this.overviewItems = overviewItems;
         if (this.overviewItems.length > 0) {
+            for (let i = 0; i < this.overviewItems.length; i++) {
+                let item = this.overviewItems[i];
+                item.update();
+            }
             this.sortOverviewItems();
+
         }
         
         this.draw();
