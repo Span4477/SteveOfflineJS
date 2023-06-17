@@ -273,9 +273,22 @@ export default class OverviewTable {
                     let newText = this.scene.add.text(textX, textY, text, this.dataFormat);
                     newText.setOrigin(1, 0.5);
                     this.dataTexts.push(newText);
+
+                    let newRect = this.scene.add.rectangle(cellX, cellY, this.cellWidth - 1, this.cellHeight);
+                    newRect.setOrigin(0, 0);
+                    newRect.setInteractive();
+                    newRect.on('pointerdown', () => {
+                        this.scene.player.setApproach(
+                            item.gameObject.position.x,
+                            item.gameObject.position.y
+                        );
+                    });
+                    this.rowRectangles.push(newRect);
                 } else {
                     // Update the text item
                     this.dataTexts[dataTextIndex].setText(text);
+
+                    
                 }
 
                 cellX += this.cellWidth;
@@ -285,6 +298,7 @@ export default class OverviewTable {
         // Remove any extra text items
         for (let i = dataTextIndex + 1; i < this.dataTexts.length; i++) {
             this.dataTexts[i].destroy();
+            this.rowRectangles[i].destroy();
         }
     }
 

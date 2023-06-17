@@ -174,15 +174,6 @@ export default class Ship extends Entity {
         const warpSpeed = this.warpSpeedAU * AU
         // Calculate the total distance from warp start to warp end
         let distance = Phaser.Math.Distance.Between(this.warpStartX, this.warpStartY, this.approach.x, this.approach.y);
-        // Calculate total distance traveled so far
-        let distanceTraveled = Phaser.Math.Distance.Between(this.warpStartX, this.warpStartY, this.position.x, this.position.y);
-        // Calculate distance remaining
-        let distanceRemaining = distance - distanceTraveled;
-
-        //Time needed to decelerate to maxSpeed
-        let timeToStop = this.warpSpeedFuncInverse(this.speed);
-        //Distance needed to decelerate to maxSpeed
-        let distanceToStop = this.warpSpeedFuncIntegrated(timeToStop);
 
         //Time needed to accelerate to warp speed
         let timeToMaxSpeed = this.warpSpeedFuncInverse(warpSpeed);
@@ -190,7 +181,7 @@ export default class Ship extends Entity {
         let distanceToMaxSpeed = this.warpSpeedFuncIntegrated(timeToMaxSpeed);
 
         let theta = Math.atan2(this.approach.y - this.warpStartY, this.approach.x - this.warpStartX);
-        let totalTime = 0
+        let totalTime = 0;
         if (distanceToMaxSpeed < distance / 2) {
             // Accelerate to warp speed, then travel at warp speed until it is time to decelerate, then decelerate to approach point
             totalTime = 2 * timeToMaxSpeed + (distance - 2 * distanceToMaxSpeed) / warpSpeed;
@@ -198,25 +189,32 @@ export default class Ship extends Entity {
                 // Accelerate
                 this.speed = this.warpSpeedFunc(this.warpDuration);
                 let d = this.warpSpeedFuncIntegrated(this.warpDuration);
-                this.position.x = this.warpStartX + d * Math.cos(theta);
-                this.position.y = this.warpStartY + d * Math.sin(theta);
+                let newX = this.warpStartX + d * Math.cos(theta);
+                let newY = this.warpStartY + d * Math.sin(theta);
+                this.position.x = newX;
+                this.position.y = newY;
                 this.velocity.x = this.speed * Math.cos(theta);
                 this.velocity.y = this.speed * Math.sin(theta);
-            } else if (this.warpDuration < timeToMaxSpeed + (distance - 2 * distanceToMaxSpeed) / warpSpeed) {
+            } else if (this.warpDuration < totalTime - timeToMaxSpeed) {
                 // Travel at warp speed
                 this.speed = warpSpeed;
-                this.position.x = this.warpStartX + distanceToMaxSpeed * Math.cos(theta) + (this.warpDuration - timeToMaxSpeed) * warpSpeed * Math.cos(theta);
-                this.position.y = this.warpStartY + distanceToMaxSpeed * Math.sin(theta) + (this.warpDuration - timeToMaxSpeed) * warpSpeed * Math.sin(theta);
+                let newX = this.warpStartX + distanceToMaxSpeed * Math.cos(theta) + (this.warpDuration - timeToMaxSpeed) * warpSpeed * Math.cos(theta);
+                let newY = this.warpStartY + distanceToMaxSpeed * Math.sin(theta) + (this.warpDuration - timeToMaxSpeed) * warpSpeed * Math.sin(theta);
+                this.position.x = newX
+                this.position.y = newY;
                 this.velocity.x = warpSpeed * Math.cos(theta);
                 this.velocity.y = warpSpeed * Math.sin(theta);
             } else {
                 // Decelerate
                 this.speed = this.warpSpeedFunc(totalTime - this.warpDuration);
                 let d = this.warpSpeedFuncIntegrated(totalTime - this.warpDuration);
-                this.position.x = this.warpStartX + distanceToMaxSpeed * Math.cos(theta) + (this.warpDuration - timeToMaxSpeed) * warpSpeed * Math.cos(theta) + d * Math.cos(theta);
-                this.position.y = this.warpStartY + distanceToMaxSpeed * Math.sin(theta) + (this.warpDuration - timeToMaxSpeed) * warpSpeed * Math.sin(theta) + d * Math.sin(theta);
+                let newX = this.warpStartX + distance * Math.cos(theta) - d * Math.cos(theta);
+                let newY = this.warpStartY + distance * Math.sin(theta) - d * Math.sin(theta);
+                this.position.x = newX;
+                this.position.y = newY;
                 this.velocity.x = this.speed * Math.cos(theta);
                 this.velocity.y = this.speed * Math.sin(theta);
+                
             }
         } else {
             // Accelerate to the halfway point, then decelerate
