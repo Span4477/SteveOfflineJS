@@ -53,7 +53,21 @@ export default class Player extends Ship {
         this.graphics.beginPath();
         if (this.speed != 0) {
             let newTheta = Math.atan2(this.velocity.y, this.velocity.x);
-            this.shipAngle += Math.min(Math.abs(newTheta - this.shipAngle), 0.1) * Math.sign(newTheta - this.shipAngle);
+            // Rotate the shipAngle no more than 5 degrees towards newTheta
+
+            let deltaTheta = newTheta - this.shipAngle;
+            if (deltaTheta > Math.PI) {
+                deltaTheta -= 2 * Math.PI;
+            }
+            if (deltaTheta < -Math.PI) {
+                deltaTheta += 2 * Math.PI;
+            }
+            if (deltaTheta > 0) {
+                this.shipAngle += Math.min(deltaTheta, 5 * Math.PI / 180);
+            }
+            if (deltaTheta < 0) {
+                this.shipAngle += Math.max(deltaTheta, -5 * Math.PI / 180);
+            }
         }
         let x1 = x + this.triangleLength * Math.cos(this.shipAngle);
         let x2 = x + this.triangleLength * Math.cos(this.shipAngle + 2 * Math.PI / 3);
