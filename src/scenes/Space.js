@@ -34,7 +34,6 @@ export default class Space extends Phaser.Scene {
         this.screenToWorld = new ScreenToWorld(this.game.config.width, this.game.config.height, 10000);
         
         this.starField = new StarField(this, 1);
-        this.gridLines = new GridLines(this);
         // Create the planets
         this.planet1 = new Planet(this, 0, 0, 2500000, 'planet1');
         this.planet2 = new Planet(this, AU, 0, 2500000, 'planet2');
@@ -46,6 +45,7 @@ export default class Space extends Phaser.Scene {
         // create enemy
         this.enemy = new Enemy(this, this.screenToWorld, 2000, -800);
 
+        this.gridLines = new GridLines(this);
         this.overview = new Overview(this, this.screenToWorld);
 
         this.overview.addOverviewItem(this.enemy, 'ship');

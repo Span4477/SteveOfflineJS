@@ -167,5 +167,6 @@ export default class Player extends Ship {
 
         this.draw();
 
+
     }
 }

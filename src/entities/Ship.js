@@ -101,10 +101,14 @@ export default class Ship extends Entity {
         let approachVector = this.approach.clone();
         // point from ship to approach point
         approachVector.subtract(this.position);
-        let angle = Math.atan2(this.velocity.y, this.velocity.x);
-        let angleApproach = Math.atan2(approachVector.y, approachVector.x);
-        let angleDiff = Math.abs(angle - angleApproach);
-        if (angleDiff > Math.PI / 9) {
+        approachVector.normalize();
+        let velVector = this.velocity.clone();
+        velVector.normalize();
+        // get the angle between the two vectors
+
+        let angle = Math.acos(approachVector.x * velVector.x + approachVector.y * velVector.y );
+        
+        if (angle > Math.PI / 9) {
             this.accelerate(delta);
             return;
         }
