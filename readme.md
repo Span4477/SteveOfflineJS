@@ -34,4 +34,4 @@ The game should now be running on [http://localhost:9000](http://localhost:9000)
 
 ## Playing the Game
 
-Click to move, W to warp, S to stop. 
+Click to move, W to warp, S to stop, mouse wheel to zoom. 
