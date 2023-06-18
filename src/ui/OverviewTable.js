@@ -78,7 +78,6 @@ export default class OverviewTable {
 
     sortColumn(columnIndex) {
         // Sort the overview items by the column
-        console.log('sortColumn', columnIndex)
         if (columnIndex === this.sortIndex) {
             // Same column, reverse the sort order
             this.ascending = !this.ascending;

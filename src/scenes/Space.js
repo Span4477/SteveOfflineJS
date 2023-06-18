@@ -21,8 +21,13 @@ export default class Space extends Phaser.Scene {
         // Here you can preload assets, like images or audio files
         // this.load.image('logo', 'assets/logo.png');
         this.load.image('thrust', 'assets/thrust.png');
+        this.load.image('gate1', 'assets/gate1.png');
         this.load.image('planet1', 'assets/planet1.png');
         this.load.image('planet2', 'assets/planet2.png');
+        this.load.image('planet3', 'assets/planet3.png');
+        this.load.image('planet4', 'assets/planet4.png');
+        this.load.image('planet5', 'assets/planet5.png');
+        this.load.json('galaxy', 'assets/galaxy.json');
 
     }
 

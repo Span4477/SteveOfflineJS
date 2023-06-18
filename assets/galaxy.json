@@ -1,0 +1,57 @@
+{
+    "name": "Cosmos",
+    "solarSystems" : [
+        {
+            "name": "Eos",
+            "star": {
+                "name": "Eos",
+                "position": [0, 0]
+            },
+            "planets": [
+                {
+                    "name": "Eos 1",
+                    "image" : "planet1",
+                    "position": [1, 1]
+                },
+                {
+                    "name": "Eos 2",
+                    "image" : "planet2",
+                    "position": [0, 2]
+                }
+            ],
+            "warpGates" : [
+                {
+                    "name": "Polemos",
+                    "image" : "gate1",
+                    "position": [-1, 0]
+                }
+            ]
+        },
+        {
+            "name": "Polemos",
+            "star": {
+                "name": "Polemos",
+                "position": [0, 0]
+            },
+            "planets": [
+                {
+                    "name": "Polemos 1",
+                    "image" : "planet3",
+                    "position": [-1, -2]
+                },
+                {
+                    "name": "Polemos 2",
+                    "image" : "planet4",
+                    "position": [0, 1]
+                }
+            ],
+            "warpGates" : [
+                {
+                    "name": "Eos",
+                    "image" : "gate1",
+                    "position": [1, 0]
+                }
+            ]
+        }
+    ]
+}
