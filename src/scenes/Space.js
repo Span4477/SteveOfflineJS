@@ -1,14 +1,13 @@
 import Phaser from 'phaser';
 
-import StarField from '../scenes/StarField';
 import ScreenToWorld from '../ui/ScreenToWorld';
 import GridLines from '../ui/GridLines';
 import Player from '../entities/Player';
 import StatusBars from '../ui/StatusBars';
 import InputHandler from '../ui/InputHandler';
-import Planet from '../entities/Planet';
 import Enemy from '../entities/Enemy';
 import Overview from '../ui/Overview';
+import Galaxy from '../entities/Galaxy';
 
 export default class Space extends Phaser.Scene {
     constructor(scene) {
@@ -18,8 +17,7 @@ export default class Space extends Phaser.Scene {
 
     preload ()
     {
-        // Here you can preload assets, like images or audio files
-        // this.load.image('logo', 'assets/logo.png');
+        //images
         this.load.image('thrust', 'assets/thrust.png');
         this.load.image('gate1', 'assets/gate1.png');
         this.load.image('planet1', 'assets/planet1.png');
@@ -27,6 +25,10 @@ export default class Space extends Phaser.Scene {
         this.load.image('planet3', 'assets/planet3.png');
         this.load.image('planet4', 'assets/planet4.png');
         this.load.image('planet5', 'assets/planet5.png');
+        this.load.image('star1', 'assets/star1.png');
+        this.load.image('star2', 'assets/star2.png');
+
+        //json
         this.load.json('galaxy', 'assets/galaxy.json');
 
     }
@@ -38,24 +40,21 @@ export default class Space extends Phaser.Scene {
         // Initialize ScreenToWorld
         this.screenToWorld = new ScreenToWorld(this.game.config.width, this.game.config.height, 10000);
         
-        this.starField = new StarField(this, 1);
-        // Create the planets
-        this.planet1 = new Planet(this, 0, 0, 2500000, 'planet1');
-        this.planet2 = new Planet(this, AU, 0, 2500000, 'planet2');
 
+        let galaxyData = this.cache.json.get('galaxy');
+        this.galaxy = new Galaxy(this, galaxyData, 'Eos');
 
         // Place the player at the center of the screen
-        this.player = new Player(this, this.screenToWorld, 0, 0);
+        this.player = new Player(this, this.screenToWorld, AU, AU);
 
         // create enemy
-        this.enemy = new Enemy(this, this.screenToWorld, 2000, -800);
+        this.enemy = new Enemy(this, this.screenToWorld, AU + 2000, AU - 800);
 
         this.gridLines = new GridLines(this);
         this.overview = new Overview(this, this.screenToWorld);
 
+        this.overview.addGalaxy(this.galaxy);
         this.overview.addOverviewItem(this.enemy, 'ship');
-        this.overview.addOverviewItem(this.planet1, 'planet');
-        this.overview.addOverviewItem(this.planet2, 'planet');
 
         // Create the status bars
         this.statusBars = new StatusBars(this, this.player);
@@ -76,8 +75,7 @@ export default class Space extends Phaser.Scene {
         this.player.update();
         this.enemy.update();
 
-        this.planet1.update();
-        this.planet2.update();
+        this.galaxy.update();
 
         // Update the statusBars
         this.statusBars.update();

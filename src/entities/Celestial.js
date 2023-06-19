@@ -1,15 +1,14 @@
 export default class Celestial extends Phaser.GameObjects.Sprite {
-    constructor(scene, worldX, worldY, radius, texture) {
-        super(scene, 0, 0, texture);
+    constructor(scene, data) {
+        super(scene, 0, 0, data.image);
+        const AU = 149597870700; // 1 AU in meters
 
-        this.radius = radius; 
+        this.radius = data.radius; 
         this.screenRadius = this.texture.source[0].width / 2;
-        console.log('Screen radius: ' + this.screenRadius)
-        console.log('Radius: ' + this.radius)
         
-        this.position = new Phaser.Math.Vector2(worldX, worldY);
-        this.name = '';
-        this.danger = 'low';
+        this.position = new Phaser.Math.Vector2(data.position[0] * AU, data.position[1] * AU);
+        this.name = data.name;
+        this.danger = data.danger;
 
         // Add this object to the scene
         scene.add.existing(this);

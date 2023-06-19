@@ -22,12 +22,20 @@ export default class OverviewItem {
             return 'Planet';
         } else if (this.gameObjectType === 'ship') {
             return 'Ship';
+        } else if (this.gameObjectType === 'warp gate') {
+            return 'Warp Gate';
+        } else if (this.gameObjectType === 'star') {
+            return 'Star';
         }
     }
     getNameText() {
         if (this.gameObjectType === 'planet') {
             return this.gameObject.name;
         } else if (this.gameObjectType === 'ship') {
+            return this.gameObject.name;
+        } else if (this.gameObjectType === 'warp gate') {
+            return this.gameObject.name;
+        } else if (this.gameObjectType === 'star') {
             return this.gameObject.name;
         }
     }
@@ -71,7 +79,12 @@ export default class OverviewItem {
             return 0;
         } else if (this.gameObjectType === 'ship') {
             return this.gameObject.velocity.length();
+        } else if (this.gameObjectType === 'warp gate') {
+            return 0;
+        } else if (this.gameObjectType === 'star') {
+            return 0;
         }
+
     }
     getVelocityText() {
         
@@ -81,6 +94,12 @@ export default class OverviewItem {
 
     calculateAngularVelocity() {
         if (this.gameObjectType === 'planet') {
+            return 0;
+        }
+        if (this.gameObjectType === 'warp gate') {
+            return 0;
+        }
+        if (this.gameObjectType === 'star') {
             return 0;
         }
         let pVelX = this.player.velocity.x;
@@ -122,7 +141,12 @@ export default class OverviewItem {
             return this.gameObject.danger;
         } else if (this.gameObjectType === 'ship') {
             return this.gameObject.danger;
+        } else if (this.gameObjectType === 'warp gate') {
+            return this.gameObject.danger;
+        } else if (this.gameObjectType === 'star') {
+            return this.gameObject.danger;
         }
+
     }
     update() {
         this.type = this.getTypeText();

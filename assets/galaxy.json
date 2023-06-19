@@ -5,25 +5,35 @@
             "name": "Eos",
             "star": {
                 "name": "Eos",
-                "position": [0, 0]
+                "image" : "star1",
+                "position": [0, 0],
+                "radius" : 2500000,
+                "danger" : "low"
             },
+            "starFieldSeed" : 1,
             "planets": [
                 {
                     "name": "Eos 1",
                     "image" : "planet1",
-                    "position": [1, 1]
+                    "position": [1, 1],
+                    "radius" : 2500000,
+                    "danger" : "low"
                 },
                 {
                     "name": "Eos 2",
                     "image" : "planet2",
-                    "position": [0, 2]
+                    "position": [0, 2],
+                    "radius" : 2500000,
+                    "danger" : "low"
                 }
             ],
             "warpGates" : [
                 {
                     "name": "Polemos",
                     "image" : "gate1",
-                    "position": [-1, 0]
+                    "position": [-1, 0],
+                    "radius" : 10000,
+                    "danger" : "low"
                 }
             ]
         },
@@ -31,25 +41,35 @@
             "name": "Polemos",
             "star": {
                 "name": "Polemos",
-                "position": [0, 0]
+                "image" : "star2",
+                "position": [0, 0],
+                "radius" : 2500000,
+                "danger" : "low"
             },
+            "starFieldSeed" : 2,
             "planets": [
                 {
                     "name": "Polemos 1",
                     "image" : "planet3",
-                    "position": [-1, -2]
+                    "position": [-1, -2],
+                    "radius" : 2500000,
+                    "danger" : "extreme"
                 },
                 {
                     "name": "Polemos 2",
                     "image" : "planet4",
-                    "position": [0, 1]
+                    "position": [0, 1],
+                    "radius" : 2500000,
+                    "danger" : "moderate"
                 }
             ],
             "warpGates" : [
                 {
                     "name": "Eos",
                     "image" : "gate1",
-                    "position": [1, 0]
+                    "position": [1, 0],
+                    "radius" : 10000,
+                    "danger" : "low"
                 }
             ]
         }

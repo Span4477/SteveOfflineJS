@@ -2,12 +2,14 @@
 import Celestial from './Celestial.js';
 
 export default class WarpGate extends Celestial {
-    constructor(scene, worldX, worldY, radius, texture, fromSystem, toSystem) {
-        super(scene, worldX, worldY, radius, texture);
-        this.name = 'Gate';
-        this.fromSystem = fromSystem;
-        this.toSystem = toSystem;
+    constructor(scene, gateData, fromSystemName) {
+        super(scene, gateData);
+        this.fromSystemName = fromSystemName;
+        this.toSystemName = gateData.name;
         this.activationRadius = 2500;
+
+        // Shrink the image
+        this.setScale(0.2);
     }
 
 }
