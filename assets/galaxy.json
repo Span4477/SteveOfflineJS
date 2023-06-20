@@ -32,7 +32,6 @@
                     "name": "Polemos",
                     "image" : "gate1",
                     "position": [-1, 0],
-                    "radius" : 10000,
                     "danger" : "low"
                 }
             ]
@@ -68,7 +67,6 @@
                     "name": "Eos",
                     "image" : "gate1",
                     "position": [1, 0],
-                    "radius" : 10000,
                     "danger" : "low"
                 }
             ]

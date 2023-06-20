@@ -18,6 +18,7 @@ export default class OverviewTable {
         this.y = this.scene.game.config.height - 5 - this.height;
 
         this.graphics = scene.add.graphics({ fillStyle: { color: 0xffffff } });  // White color
+        this.graphics.setDepth(3);
         
         this.headerTexts = [];
         this.headerFormat = { 
@@ -59,6 +60,7 @@ export default class OverviewTable {
             let textY = this.y + 10;
             let text = this.scene.add.text(textX, textY, label, this.headerFormat);
             text.setOrigin(0, 0.5);
+            text.setDepth(4);
             this.headerTexts.push(text);
 
             // Create a rectangle at the location of the text.
@@ -276,6 +278,7 @@ export default class OverviewTable {
                 if (dataTextIndex >= this.dataTexts.length) {
                     let newText = this.scene.add.text(textX, textY, text, this.dataFormat);
                     newText.setOrigin(1, 0.5);
+                    newText.setDepth(4);
                     this.dataTexts.push(newText);
 
                     let newRect = this.scene.add.rectangle(cellX, cellY, this.cellWidth - 1, this.cellHeight);
@@ -284,6 +287,16 @@ export default class OverviewTable {
                     newRect.on('pointerdown', this.onRowClick);
                     newRect.on('pointerover', () => {
                         this.rowHoverIndex = i;
+                        console.log(this.overviewItems[i].type);
+                        if (this.overviewItems[i].type == 'Gate') {
+                            this.overviewItems[i].gameObject.isHovering = true;
+                        }
+                    }); 
+                    newRect.on('pointerout', () => {
+                        this.rowHoverIndex = -1;
+                        if (this.overviewItems[i].type == 'Gate') {
+                            this.overviewItems[i].gameObject.isHovering = false;
+                        }
                     });
                     this.rowRectangles.push(newRect);
                 } else {

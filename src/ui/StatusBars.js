@@ -14,6 +14,7 @@ export default class StatusBars {
 
         // Create the graphics object for the bars
         this.graphics = scene.add.graphics({ fillStyle: { color: 0xffffff } });  // White color
+        this.graphics.setDepth(3);
 
         // Create the font attributes for the text
         // https://photonstorm.github.io/phaser3-docs/Phaser.Types.GameObjects.Text.html#.TextStyle

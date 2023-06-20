@@ -40,8 +40,15 @@ export default class Galaxy {
         }
         return false;
     }
+    jumpLandingCoordinates(x, y) {
+        // When the player jumps to a system, they should land 15km away from the gate, at a random direction.
+        let angle = Math.random() * 2 * Math.PI;
+        let distance = 15000;
+        let landingX = x + distance * Math.cos(angle);
+        let landingY = y + distance * Math.sin(angle);
+        return { x: landingX, y: landingY };
+    }
     jumpSystem(systemName) {
-        console.log('Current system before jump: ' + this.currentSystem.name);
         let fromSystemName = this.currentSystem.name;
         this.currentSystem.clear();
         this.changeSystem(systemName);
@@ -50,11 +57,10 @@ export default class Galaxy {
             let gate = this.currentSystem.warpGates[i];
             console.log('Gate from ' + gate.fromSystemName + ' to ' + gate.toSystemName);
             if (gate.name === fromSystemName) {
-                console.log('Jump to gate ' + gate.toSystemName)
-                this.scene.player.jumpSystem(gate.position.x, gate.position.y);
+                let landingCoordinates = this.jumpLandingCoordinates(gate.position.x, gate.position.y);
+                this.scene.player.jumpSystem(landingCoordinates.x, landingCoordinates.y);
             }
         }
-        console.log('Current system after jump: ' + this.currentSystem.name);
     }
     update() {
         this.currentSystem.update();

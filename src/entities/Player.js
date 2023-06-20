@@ -14,6 +14,7 @@ export default class Player extends Ship {
         this.triangleLength = 10;
         
         this.approachText = this.scene.add.text(0, 0, 'Approach', { color: '#ffffff', fontSize: '12px' }).setOrigin(0.5, 0.5);
+        this.approachText.setDepth(3);
         this.approachText.setVisible(false);
 
         this.shipAngle = - Math.PI / 2;

@@ -23,7 +23,7 @@ export default class OverviewItem {
         } else if (this.gameObjectType === 'ship') {
             return 'Ship';
         } else if (this.gameObjectType === 'warp gate') {
-            return 'Warp Gate';
+            return 'Gate';
         } else if (this.gameObjectType === 'star') {
             return 'Star';
         }

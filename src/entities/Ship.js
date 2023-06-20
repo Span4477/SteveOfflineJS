@@ -44,6 +44,8 @@ export default class Ship extends Entity {
         this.approach.y = y;
         this.approachXInput = x;
         this.approachYInput = y;
+        this.velocity.x = 0;
+        this.velocity.y = 0;
         this.moveState = 'stop';
         this.moveStateInput = 'stop';
 

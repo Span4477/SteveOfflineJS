@@ -3,7 +3,7 @@ export default class Celestial extends Phaser.GameObjects.Sprite {
         super(scene, 0, 0, data.image);
         const AU = 149597870700; // 1 AU in meters
 
-        this.radius = data.radius; 
+         
         this.screenRadius = this.texture.source[0].width / 2;
         
         this.position = new Phaser.Math.Vector2(data.position[0] * AU, data.position[1] * AU);
