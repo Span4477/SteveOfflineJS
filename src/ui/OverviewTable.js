@@ -197,6 +197,10 @@ export default class OverviewTable {
             }
             this.sortOverviewItems();
 
+        } else {
+            // No overview items, clear the table
+            this.dataTexts = [];
+            this.rowRectangles = [];
         }
         
         this.draw();

@@ -9,6 +9,7 @@ export default class Enemy extends Ship {
         this.screenToWorld = screenToWorld;
         // Create the graphics for the player ship
         this.graphics = this.scene.add.graphics({ lineStyle: { color: 0xffffff } });  // White color
+        this.graphics.setDepth(2);
 
         this.length = 10;
         
@@ -22,22 +23,7 @@ export default class Enemy extends Ship {
         // Rotate the square to point in the direction of the velocity
         this.graphics.beginPath();
         if (this.speed != 0) {
-            let newTheta = Math.atan2(this.velocity.y, this.velocity.x);
-            // Rotate the shipAngle no more than 5 degrees towards newTheta
-
-            let deltaTheta = newTheta - this.shipAngle;
-            if (deltaTheta > Math.PI) {
-                deltaTheta -= 2 * Math.PI;
-            }
-            if (deltaTheta < -Math.PI) {
-                deltaTheta += 2 * Math.PI;
-            }
-            if (deltaTheta > 0) {
-                this.shipAngle += Math.min(deltaTheta, 5 * Math.PI / 180);
-            }
-            if (deltaTheta < 0) {
-                this.shipAngle += Math.max(deltaTheta, -5 * Math.PI / 180);
-            }
+            this.shipAngle = Math.atan2(this.velocity.y, this.velocity.x);
         }
         let x1 = x + this.length * Math.cos(this.shipAngle);
         let x2 = x + this.length * Math.cos(this.shipAngle + Math.PI / 2);

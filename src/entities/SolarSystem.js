@@ -10,7 +10,7 @@ export default class SolarSystem {
         this.systemData = systemData;
         this.name = systemData.name;
 
-        this.starField = new StarField(scene, systemData.starField);
+        this.starField = new StarField(scene, systemData.starFieldSeed);
 
         this.planets = [];
         this.warpGates = [];
@@ -33,6 +33,18 @@ export default class SolarSystem {
         });
     }
 
+    clear() {
+        this.planets.forEach((planet) => {
+            planet.destroy();
+        });
+        this.warpGates.forEach((gate) => {
+            gate.destroy();
+        });
+        this.star.destroy();
+        this.starField.clear();
+        this.scene.overview.clear();
+    }
+
     update() {
         this.planets.forEach((planet) => {
             planet.update();
@@ -41,5 +53,6 @@ export default class SolarSystem {
             gate.update();
         });
         this.star.update();
+
     }
 }

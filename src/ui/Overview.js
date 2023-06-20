@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import OverviewItem from './OverviewItem';
 import OverviewTable from './OverviewTable';
+
 export default class Overview {
     constructor(scene) {
         this.scene = scene;
@@ -28,15 +29,19 @@ export default class Overview {
 
     update() {
         // Update the table
+        this.overviewItems = [];
+        
+        this.addGalaxy();
+
         this.table.update(this.overviewItems);
 
     }
 
-    addGalaxy(galaxy) {
-        let solarSystem = galaxy.currentSystem;
-        console.log(solarSystem.name);
+    addGalaxy() {
+        let solarSystem = this.scene.galaxy.currentSystem;
         // add the solarSystem's planets
         for (let i = 0; i < solarSystem.planets.length; i++) {
+            
             this.addOverviewItem(solarSystem.planets[i], 'planet');
         }
         // add the solarSystem's warpGates

@@ -10,6 +10,23 @@ export default class WarpGate extends Celestial {
 
         // Shrink the image
         this.setScale(0.2);
+
+        this.isHovering = false;
+
+        // add mouseover event
+        this.setInteractive();
+        this.on('pointerover', () => {
+            this.isHovering = true;
+        });
+        this.on('pointerout', () => {
+            this.isHovering = false;
+        });
+
+    }
+
+    jump() {
+        this.isHovering = false;
+        this.scene.galaxy.jumpSystem(this.toSystemName);
     }
 
 }

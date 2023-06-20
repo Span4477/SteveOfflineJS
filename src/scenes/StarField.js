@@ -18,11 +18,16 @@ export default class StarField {
             let x = rng() * this.scene.game.config.width;
             let y = rng() * this.scene.game.config.height;
             let star = this.scene.add.rectangle(x, y, 1, 1, 0xffffff);
+            star.setDepth(0);
             stars.push(star);
         }
 
         return stars;
     }
 
-    // ... additional methods for updating, destroying, etc. as needed
+    clear() {
+        this.stars.forEach((star) => {
+            star.destroy();
+        });
+    }
 }

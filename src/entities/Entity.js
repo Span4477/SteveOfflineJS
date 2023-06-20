@@ -8,10 +8,12 @@ export default class Entity extends Phaser.GameObjects.GameObject {
         this.type = type;
         this.danger = 'low';
 
-        
         // Initialize position and velocity
         this.position = new Phaser.Math.Vector2(x, y);
         this.velocity = new Phaser.Math.Vector2(0, 0);
+
+        this.addedToOverview = false;
+        this.removeFromOverview = false;
     }
 
     update() {

@@ -39,22 +39,18 @@ export default class Space extends Phaser.Scene {
         
         // Initialize ScreenToWorld
         this.screenToWorld = new ScreenToWorld(this.game.config.width, this.game.config.height, 10000);
-        
 
         let galaxyData = this.cache.json.get('galaxy');
         this.galaxy = new Galaxy(this, galaxyData, 'Eos');
 
         // Place the player at the center of the screen
-        this.player = new Player(this, this.screenToWorld, AU, AU);
+        this.player = new Player(this, this.screenToWorld, -AU, 0);
 
         // create enemy
         this.enemy = new Enemy(this, this.screenToWorld, AU + 2000, AU - 800);
 
         this.gridLines = new GridLines(this);
         this.overview = new Overview(this, this.screenToWorld);
-
-        this.overview.addGalaxy(this.galaxy);
-        this.overview.addOverviewItem(this.enemy, 'ship');
 
         // Create the status bars
         this.statusBars = new StatusBars(this, this.player);

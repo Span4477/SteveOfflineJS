@@ -34,9 +34,20 @@ export default class Ship extends Entity {
         this.moveStateInput = this.moveState;
         this.approachXInput = this.approach.x;
         this.approachYInput = this.approach.y;
+
     }
 
-    
+    jumpSystem(x, y) {
+        this.position.x = x;
+        this.position.y = y;
+        this.approach.x = x;
+        this.approach.y = y;
+        this.approachXInput = x;
+        this.approachYInput = y;
+        this.moveState = 'stop';
+        this.moveStateInput = 'stop';
+
+    }
 
     updateCapacitor(delta) {
         // Update the capacitor

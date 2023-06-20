@@ -10,10 +10,13 @@ export default class Celestial extends Phaser.GameObjects.Sprite {
         this.name = data.name;
         this.danger = data.danger;
 
+        this.addedToOverview = false;
+        this.removeFromOverview = false;
+
         // Add this object to the scene
         scene.add.existing(this);
 
-        
+        this.setDepth(1);
     }
 
     update() {

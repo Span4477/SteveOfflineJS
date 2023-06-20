@@ -16,6 +16,10 @@ export default class InputHandler {
             
             this.scene.player.setMoveState('startWarp');
         }
+        if (event.key === 'j') {
+            // if it is also hovering a gate, jump
+            this.scene.galaxy.tryJumpSystem();
+        }
     }
 
     handlePointer(pointer) {
@@ -43,4 +47,5 @@ export default class InputHandler {
             this.scene.screenToWorld.zoomIn();
         }
     }
+
 }
