@@ -20,10 +20,13 @@ export default class GridLines {
                 color: 0xffffff
             }
         });
+        this.graphics.setDepth(3);
 
         // Create text objects for the distances
         this.distanceTexts = this.distances.map((distance, i) => {
-            return this.scene.add.text(0, 0, distance, {color: '#ffffff', fontSize: '12px'});
+            let txt = this.scene.add.text(0, 0, distance, {color: '#ffffff', fontSize: '12px'});
+            txt.setDepth(3);
+            return txt;
         });
     }
 

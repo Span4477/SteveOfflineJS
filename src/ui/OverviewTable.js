@@ -69,10 +69,11 @@ export default class OverviewTable {
 
             let rect = this.scene.add.rectangle(textX, textY, this.cellWidth - 1, this.cellHeight);
             rect.setOrigin(0, 0.5);
-            rect.setInteractive();
+            rect.setInteractive({ useHandCursor: true });
             rect.on('pointerdown', () => {
                 this.sortColumn(i);
             });
+            rect.setDepth(4);
 
         }
 
@@ -190,6 +191,9 @@ export default class OverviewTable {
     }
 
     update(overviewItems) {
+        this.checkGateHover();
+
+
         // Update the cell values
         this.overviewItems = overviewItems;
         if (this.overviewItems.length > 0) {
@@ -204,7 +208,6 @@ export default class OverviewTable {
             this.dataTexts = [];
             this.rowRectangles = [];
         }
-        
         this.draw();
     }
 
@@ -234,6 +237,33 @@ export default class OverviewTable {
         }
     }
 
+    checkGateHover() {
+        if (this.rowHoverIndex == -1) {
+            return;
+        }
+        if (this.overviewItems.length == 0) {
+            return;
+        }
+        if (this.overviewItems[this.rowHoverIndex].type == 'Gate') {
+            this.overviewItems[this.rowHoverIndex].gameObject.isHovering = true;
+        }
+    }
+
+    createSelectableRow(x, y, w, h, i) {
+        let newRect = this.scene.add.rectangle(x, y, w, h);
+        newRect.setOrigin(0, 0);
+        newRect.setInteractive({ useHandCursor: true });
+        newRect.on('pointerdown', this.onRowClick);
+        newRect.on('pointerover', () => {
+            this.rowHoverIndex = i;
+        }); 
+        newRect.on('pointerout', () => {
+            this.rowHoverIndex = -1;
+        });
+        newRect.setDepth(5);
+        this.rowRectangles.push(newRect);
+    }
+
     drawData() {
         let dataTextIndex = 0;
         // Draw the data cells
@@ -244,6 +274,12 @@ export default class OverviewTable {
             let textX = cellX + this.cellWidth - 10;
             let textY = cellY + this.cellHeight / 2;
             let text;
+            
+            if (i >= this.rowRectangles.length) {
+                this.createSelectableRow(cellX, cellY, this.cellWidth * this.columnLabels.length, this.cellHeight, i);
+            }
+
+
             // Draw the text for each column
             for (let j = 0; j < this.columnLabels.length; j++) {
                 dataTextIndex = i * this.columnLabels.length + j;
@@ -280,25 +316,7 @@ export default class OverviewTable {
                     newText.setOrigin(1, 0.5);
                     newText.setDepth(4);
                     this.dataTexts.push(newText);
-
-                    let newRect = this.scene.add.rectangle(cellX, cellY, this.cellWidth - 1, this.cellHeight);
-                    newRect.setOrigin(0, 0);
-                    newRect.setInteractive();
-                    newRect.on('pointerdown', this.onRowClick);
-                    newRect.on('pointerover', () => {
-                        this.rowHoverIndex = i;
-                        console.log(this.overviewItems[i].type);
-                        if (this.overviewItems[i].type == 'Gate') {
-                            this.overviewItems[i].gameObject.isHovering = true;
-                        }
-                    }); 
-                    newRect.on('pointerout', () => {
-                        this.rowHoverIndex = -1;
-                        if (this.overviewItems[i].type == 'Gate') {
-                            this.overviewItems[i].gameObject.isHovering = false;
-                        }
-                    });
-                    this.rowRectangles.push(newRect);
+                    
                 } else {
                     // Update the text item
                     this.dataTexts[dataTextIndex].setText(text);
@@ -307,6 +325,7 @@ export default class OverviewTable {
                 cellX += this.cellWidth;
                 textX += this.cellWidth;
             }
+
         }
         // Remove any extra text items
         for (let i = dataTextIndex + 1; i < this.dataTexts.length; i++) {
