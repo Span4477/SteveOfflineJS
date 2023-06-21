@@ -10,8 +10,9 @@ export default class Ship extends Entity {
         this.maxHull = 100;
         this.armor = 100;
         this.maxArmor = 100;
-        this.shield = 100;
+        this.shield = 25;
         this.maxShield = 100;
+        this.shieldRechargeTime = 1000 * 60 * 3;  // 1000 = 1 second
         this.capacitor = 0;
         this.maxCapacitor = 100;
         this.capacitorRechargeTime = 1000 * 10;  // 1000 = 1 second
@@ -23,12 +24,26 @@ export default class Ship extends Entity {
         this.warpSpeedAU = 1;
         this.capacitorToWarp = 25;
         this.moveState = 'stop';
-        this.name = 'Shipy McShipface';
+        this.name = 'McShipface';
         this.danger = 'low';
         
         this.warpStartX = 0;
         this.warpStartY = 0;
         this.warpDuration = 0;
+
+        // resistances
+        this.shieldEmResistance = 0.0;
+        this.shieldThermalResistance = 0.2;
+        this.shieldKineticResistance = 0.4;
+        this.shieldExplosiveResistance = 0.6;
+        this.armorEmResistance = 0.6;
+        this.armorThermalResistance = 0.4;
+        this.armorKineticResistance = 0.2;
+        this.armorExplosiveResistance = 0.0;
+        this.hullEmResistance = 0.0;
+        this.hullThermalResistance = 0.0;
+        this.hullKineticResistance = 0.0;
+        this.hullExplosiveResistance = 0.0;
 
         
         this.moveStateInput = this.moveState;
@@ -61,6 +76,18 @@ export default class Ship extends Entity {
         let b = Math.exp(-5 * delta / this.capacitorRechargeTime);
         let c = 1 + a * b;
         this.capacitor = this.maxCapacitor * c * c;
+    }
+    
+    updateShield(delta) {
+        // Update the shield
+        if (this.shield > this.maxShield * 0.999 ) {
+            this.shield = this.maxShield;
+            return;
+        }
+        let a = Math.sqrt(this.shield / this.maxShield) - 1.0;
+        let b = Math.exp(-5 * delta / this.shieldRechargeTime);
+        let c = 1 + a * b;
+        this.shield = this.maxShield * c * c;
     }
 
     velocityFunc(t, vMax) {
@@ -388,6 +415,78 @@ export default class Ship extends Entity {
 
     }
 
+    takeDamage(EmDamage, ThermalDamage, KineticDamage, ExplosiveDamage) {
+        // Update the current armor, shield, and hull. Take into account resistances.
 
+        // The ship only takes armor damage if the sheild is down
+
+        // The ship only takes hull damage if the armor is down
+
+        let totalDamage = EmDamage + ThermalDamage + KineticDamage + ExplosiveDamage;
+        let emPct = EmDamage / totalDamage;
+        let thermalPct = ThermalDamage / totalDamage;
+        let kineticPct = KineticDamage / totalDamage;
+        let explosivePct = ExplosiveDamage / totalDamage;
+        // Exit function if totalDamage is 0
+        if (totalDamage <= 0) {
+            return;
+        }
+        
+        // Calculate the damage to the shield
+        let potentialShieldDamage = EmDamage * (1 - this.shieldEmResistance) + ThermalDamage * (1 - this.shieldThermalResistance) + KineticDamage * (1 - this.shieldKineticResistance) + ExplosiveDamage * (1 - this.shieldExplosiveResistance);
+        let actualShieldDamage = Math.min(potentialShieldDamage, this.shield);
+        // Calculate the total damage resisted by the shield
+        let shieldResistedDamage = Math.min(totalDamage, this.shield) - actualShieldDamage;
+        shieldResistedDamage = Math.max(shieldResistedDamage, 0);
+        
+        console.log("actualShieldDamage: " + actualShieldDamage);
+        console.log("shieldResistedDamage: " + shieldResistedDamage);
+        this.shield -= actualShieldDamage;
+
+        totalDamage = totalDamage - shieldResistedDamage - actualShieldDamage;
+        
+        // Reduce EmDamage, ThermalDamage, KineticDamage, and ExplosiveDamage by the amount the shield took and resisted
+        EmDamage = totalDamage * emPct;
+        ThermalDamage = totalDamage * thermalPct;
+        KineticDamage = totalDamage * kineticPct;
+        ExplosiveDamage = totalDamage * explosivePct;
+        
+        // Exit function if totalDamage is 0
+        if (totalDamage <= 0) {
+            return;
+        }
+
+        // Calculate the damage to the armor
+        let potentialArmorDamage = EmDamage * (1 - this.armorEmResistance) + ThermalDamage * (1 - this.armorThermalResistance) + KineticDamage * (1 - this.armorKineticResistance) + ExplosiveDamage * (1 - this.armorExplosiveResistance);
+        let actualArmorDamage = Math.min(potentialArmorDamage, this.armor);
+        // Calculate the total damage resisted by the armor
+        let armorResistedDamage = Math.min(totalDamage, this.armor) - actualArmorDamage;
+        armorResistedDamage = Math.max(armorResistedDamage, 0);
+
+        this.armor -= actualArmorDamage;
+
+        console.log("actualArmorDamage: " + actualArmorDamage);
+        console.log("armorResistedDamage: " + armorResistedDamage);
+        totalDamage = totalDamage - armorResistedDamage - actualArmorDamage;
+
+        // Reduce EmDamage, ThermalDamage, KineticDamage, and ExplosiveDamage by the amount the armor took and resisted
+        EmDamage = totalDamage * emPct;
+        ThermalDamage = totalDamage * thermalPct;
+        KineticDamage = totalDamage * kineticPct;
+        ExplosiveDamage = totalDamage * explosivePct;
+        
+        // Exit function if totalDamage is 0
+        if (totalDamage <= 0) {
+            return;
+        }
+
+        // Calculate the damage to the hull
+        let potentialHullDamage = EmDamage * (1 - this.hullEmResistance) + ThermalDamage * (1 - this.hullThermalResistance) + KineticDamage * (1 - this.hullKineticResistance) + ExplosiveDamage * (1 - this.hullExplosiveResistance);
+        let actualHullDamage = Math.min(potentialHullDamage, this.hull);
+        
+        console.log("actualHullDamage: " + actualHullDamage);
+        this.hull -= actualHullDamage;
+
+    }
     
 }

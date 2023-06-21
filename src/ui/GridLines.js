@@ -53,7 +53,7 @@ export default class GridLines {
             let worldDistance = screenToWorld.toWorldDistance(distance);
 
             // Draw the dashed circle
-            this.strokeDashedCircle(this.scene.game.config.width / 2, this.scene.game.config.height / 2, distance, 5, 5)
+            this.strokeDashedCircle(this.scene.game.config.width / 2, this.scene.game.config.height / 2, distance, 1, 5)
 
             // Update the position and text of the distance label
             //Format the label text to be in kilometers with 1 decimal place

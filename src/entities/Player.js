@@ -160,6 +160,7 @@ export default class Player extends Ship {
         let delta = this.scene.game.loop.delta;
         // Update position and velocity based on your game's mechanics
         this.updateCapacitor(delta);
+        this.updateShield(delta);
 
         this.setSpeed();
         this.updateMovementState(delta);
