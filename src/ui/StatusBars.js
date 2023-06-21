@@ -14,7 +14,7 @@ export default class StatusBars {
 
         // Create the graphics object for the bars
         this.graphics = scene.add.graphics({ fillStyle: { color: 0xffffff } });  // White color
-        this.graphics.setDepth(3);
+        this.graphics.setDepth(4);
 
         // Create the font attributes for the text
         // https://photonstorm.github.io/phaser3-docs/Phaser.Types.GameObjects.Text.html#.TextStyle
@@ -35,7 +35,9 @@ export default class StatusBars {
         this.textY = this.y - this.height - 15;
         this.hoverText = this.scene.add.text(this.textX, this.textY, '', this.fontAttributes);
         this.hoverText.setOrigin(0.5, 0.5);
+        this.hoverText.setDepth(4);
         this.hoverIndex = -1;
+        this.barBoxes = [];
         
         for (let i = 0; i < this.attributes.length; i++) {
             
@@ -46,7 +48,24 @@ export default class StatusBars {
             // Draw the text for the bar, rotated 90 degrees counter-clockwise
             // Capitolize the first letter of the attribute
             let label = attribute.charAt(0).toUpperCase() + attribute.slice(1);
-            this.scene.add.text(barX - barWidth / 2, barY - this.height / 2, label, this.fontAttributes).setOrigin(0.5, 0.5).setAngle(-90);
+            let labelText = this.scene.add.text(barX - barWidth / 2, barY - this.height / 2, label, this.fontAttributes).setOrigin(0.5, 0.5).setAngle(-90);
+            labelText.setDepth(4);
+            
+            // Create an interactive rectangle at the position of the bar
+            let barBox = this.scene.add.rectangle(barX, barY, barWidth, this.height);
+            barBox.setDepth(4);
+            barBox.setOrigin(0, 1);
+            barBox.setInteractive({ useHandCursor: true });
+            // Add a pointerover event listener to the barBox
+            barBox.on('pointerover', () => {
+                this.hoverIndex = i;
+            });
+            // Add a pointerout event listener to the barBox
+            barBox.on('pointerout', () => {
+                // Remove the text
+                this.hoverText.setText('');
+                this.hoverIndex = -1;
+            });
         }
 
         
@@ -99,20 +118,6 @@ export default class StatusBars {
             // Draw a box outlining the bar 
             this.graphics.strokeRect(barX, barY, barWidth, -this.height);
 
-            // Create an interactive rectangle at the position of the bar
-            let barBox = this.scene.add.rectangle(barX, barY, barWidth, this.height);
-            barBox.setOrigin(0, 1);
-            barBox.setInteractive({ useHandCursor: true });
-            // Add a pointerover event listener to the barBox
-            barBox.on('pointerover', () => {
-                this.hoverIndex = i;
-            });
-            // Add a pointerout event listener to the barBox
-            barBox.on('pointerout', () => {
-                // Remove the text
-                this.hoverText.setText('');
-                this.hoverIndex = -1;
-            });
             if (i == this.hoverIndex) {
                 // Draw the text for the bar
                 this.hoverText.setText(this.formatHoverTextNumbers(curVal, maxVal));
