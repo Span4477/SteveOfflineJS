@@ -13,7 +13,7 @@ export default class OverviewItem {
         this.distance = this.getDistanceText();
         this.velocity = this.getVelocityText();
         this.angularVelocity = this.getAngularVelocityText();
-        this.danger = this.getDangerText();
+        this.security = this.getSecurityText();
 
     }
 
@@ -136,15 +136,15 @@ export default class OverviewItem {
         return this.toMetricText(this.calculateAngularVelocity()) + 'd/s';
     }
 
-    getDangerText() {
+    getSecurityText() {
         if (this.gameObjectType === 'planet') {
-            return this.gameObject.danger;
+            return this.gameObject.security.toFixed(1);
         } else if (this.gameObjectType === 'ship') {
-            return this.gameObject.danger;
+            return this.gameObject.security.toFixed(1);
         } else if (this.gameObjectType === 'warp gate') {
-            return this.gameObject.danger;
+            return this.gameObject.security.toFixed(1);
         } else if (this.gameObjectType === 'star') {
-            return this.gameObject.danger;
+            return this.gameObject.security.toFixed(1);
         }
 
     }
@@ -154,6 +154,6 @@ export default class OverviewItem {
         this.distance = this.getDistanceText();
         this.velocity = this.getVelocityText();
         this.angularVelocity = this.getAngularVelocityText();
-        this.danger = this.getDangerText();
+        this.security = this.getSecurityText();
     }
 }

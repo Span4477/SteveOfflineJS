@@ -8,7 +8,7 @@ export default class Celestial extends Phaser.GameObjects.Sprite {
         
         this.position = new Phaser.Math.Vector2(data.position[0] * AU, data.position[1] * AU);
         this.name = data.name;
-        this.danger = data.danger;
+        this.security = data.security;
 
         this.addedToOverview = false;
         this.removeFromOverview = false;

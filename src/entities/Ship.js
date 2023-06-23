@@ -25,7 +25,7 @@ export default class Ship extends Entity {
         this.capacitorToWarp = 25;
         this.moveState = 'stop';
         this.name = 'McShipface';
-        this.danger = 'low';
+        this.security = 5;
         
         this.warpStartX = 0;
         this.warpStartY = 0;
@@ -45,7 +45,22 @@ export default class Ship extends Entity {
         this.hullKineticResistance = 0.0;
         this.hullExplosiveResistance = 0.0;
 
+        // Fitting
+        this.highSlots = 3;
+        this.midSlots = 3;
+        this.lowSlots = 3;
+        this.rigSlots = 3;
+        this.rigSize = 's';
+        this.maxRigPoints = 400;
+        this.maxPowergrid = 41;
+        this.maxCPU = 130;
+
+        this.highModules = [];
+        this.midModules = [];
+        this.lowModules = [];
+        this.rigModules = [];
         
+        // Input
         this.moveStateInput = this.moveState;
         this.approachXInput = this.approach.x;
         this.approachYInput = this.approach.y;

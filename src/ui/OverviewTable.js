@@ -5,7 +5,7 @@ export default class OverviewTable {
         this.scene = scene;
         this.overviewItems = overviewItems;
         
-        this.columnLabels = ['Name', 'Type', 'Distance', 'Velocity', 'Angular', 'Danger'];
+        this.columnLabels = ['Name', 'Type', 'Distance', 'Velocity', 'Angular', 'security'];
         this.sortIndex = 2;
         this.sortArrowSize = 5;
         this.ascending = true;
@@ -133,6 +133,11 @@ export default class OverviewTable {
         // Sort by velocity
         let velocityA = a.calcVelocity();
         let velocityB = b.calcVelocity();
+        if (velocityA == velocityB) {
+            let distanceA = a.calcDistance();
+            let distanceB = b.calcDistance();
+            return distanceA - distanceB;
+        }
         return velocityA - velocityB;
     }
 
@@ -140,22 +145,24 @@ export default class OverviewTable {
         // Sort by angular velocity
         let angularA = a.calculateAngularVelocity();
         let angularB = b.calculateAngularVelocity();
+        if (angularA == angularB) {
+            let distanceA = a.calcDistance();
+            let distanceB = b.calcDistance();
+            return distanceA - distanceB;
+        }
         return angularA - angularB;
     }
 
-    sortByDanger(a, b) {
-        // Sort by danger
-        let dangerA = a.gameObject.danger.toUpperCase();
-        let dangerB = b.gameObject.danger.toUpperCase();
-        if (dangerA < dangerB) {
-            return -1;
+    sortBySecurity(a, b) {
+        // Sort by security
+        let securityA = a.gameObject.security;
+        let securityB = b.gameObject.security;
+        if (securityA = securityB) {
+            let distanceA = a.calcDistance();
+            let distanceB = b.calcDistance();
+            return distanceA - distanceB;
         }
-        if (dangerA > dangerB) {
-            return 1
-        }
-        let distanceA = a.calcDistance();
-        let distanceB = b.calcDistance();
-        return distanceA - distanceB;
+        return securityA - securityB;
     }
 
     sortOverviewItems() {
@@ -178,7 +185,7 @@ export default class OverviewTable {
                 sortFunction = this.sortByAngular;
                 break;
             case 5:
-                sortFunction = this.sortByDanger;
+                sortFunction = this.sortBySecurity;
                 break;
             default:
                 sortFunction = this.sortByName;
@@ -300,8 +307,8 @@ export default class OverviewTable {
                     case 'Angular':
                         text = item.angularVelocity;
                         break;
-                    case 'Danger':
-                        text = item.danger;
+                    case 'security':
+                        text = item.security;
                         break;
                     default:
                         text = '';

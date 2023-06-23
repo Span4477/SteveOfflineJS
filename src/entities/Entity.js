@@ -6,7 +6,7 @@ export default class Entity extends Phaser.GameObjects.GameObject {
 
         this.scene = scene;
         this.type = type;
-        this.danger = 'low';
+        this.security = 5;
 
         // Initialize position and velocity
         this.position = new Phaser.Math.Vector2(x, y);

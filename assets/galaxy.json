@@ -8,7 +8,7 @@
                 "image" : "star1",
                 "position": [0, 0],
                 "radius" : 2500000,
-                "danger" : "low"
+                "security" : 5.0
             },
             "starFieldSeed" : 1,
             "planets": [
@@ -17,14 +17,14 @@
                     "image" : "planet1",
                     "position": [1, 1],
                     "radius" : 2500000,
-                    "danger" : "low"
+                    "security" : 5.0
                 },
                 {
                     "name": "Eos 2",
                     "image" : "planet2",
                     "position": [0, 2],
                     "radius" : 2500000,
-                    "danger" : "low"
+                    "security" : 5.0
                 }
             ],
             "warpGates" : [
@@ -32,7 +32,7 @@
                     "name": "Polemos",
                     "image" : "gate1",
                     "position": [-1, 0],
-                    "danger" : "low"
+                    "security" : 5.0
                 }
             ]
         },
@@ -43,7 +43,7 @@
                 "image" : "star2",
                 "position": [0, 0],
                 "radius" : 2500000,
-                "danger" : "low"
+                "security" : 5.0
             },
             "starFieldSeed" : 2,
             "planets": [
@@ -52,14 +52,14 @@
                     "image" : "planet3",
                     "position": [-1, -2],
                     "radius" : 2500000,
-                    "danger" : "extreme"
+                    "security" : 0
                 },
                 {
                     "name": "Polemos 2",
                     "image" : "planet4",
                     "position": [0, 1],
                     "radius" : 2500000,
-                    "danger" : "moderate"
+                    "security" : 3
                 }
             ],
             "warpGates" : [
@@ -67,7 +67,7 @@
                     "name": "Eos",
                     "image" : "gate1",
                     "position": [1, 0],
-                    "danger" : "low"
+                    "security" : 5.0
                 }
             ]
         }
