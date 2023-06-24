@@ -26,6 +26,9 @@ export default class InputHandler {
         if (this.scene.overview.coordInOverview(pointer.x, pointer.y)) {
             return;
         }
+        if (this.scene.sideBar.coordInSideBar(pointer.x, pointer.y)) {
+            return;
+        }
         const screenX = pointer.x;
         const screenY = pointer.y;
         

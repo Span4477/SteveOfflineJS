@@ -46,25 +46,145 @@ export default class Ship extends Entity {
         this.hullExplosiveResistance = 0.0;
 
         // Fitting
-        this.highSlots = 3;
-        this.midSlots = 3;
-        this.lowSlots = 3;
-        this.rigSlots = 3;
+        this.maxHighSlots = 3;
+        this.maxMidSlots = 3;
+        this.maxLowSlots = 3;
+        this.maxRigSlots = 3;
+
+        this.highSlots = 0;
+        this.midSlots = 0;
+        this.lowSlots = 0;
+        this.rigSlots = 0;
+
         this.rigSize = 's';
         this.maxRigPoints = 400;
+
         this.maxPowergrid = 41;
         this.maxCPU = 130;
 
-        this.highModules = [];
-        this.midModules = [];
-        this.lowModules = [];
-        this.rigModules = [];
+        this.powergrid = 0;
+        this.cpu = 0;
+
+
+        // Cargo
+        this.cargoCapacity = 500;
+        this.cargo = [];
+
+        // Modules
+        this.passiveArmorResistanceModules = [];
         
         // Input
         this.moveStateInput = this.moveState;
         this.approachXInput = this.approach.x;
         this.approachYInput = this.approach.y;
 
+    }
+
+    getCPU() {
+        // Return the current CPU
+        let cpu = 0;
+        for (let i = 0; i < this.passiveArmorResistanceModules.length; i++) {
+            cpu += this.passiveArmorResistanceModules[i].cpu;
+        }
+        return cpu;
+    }
+
+    equipPassiveArmorResistanceModule(module) {
+        // Check if module can be equipped
+    }
+
+    getCurrentCargoVolume() {
+        // Return the current volume of the cargo
+        let volume = 0;
+        for (let i = 0; i < this.cargo.length; i++) {
+            volume += this.cargo[i].volume;
+        }
+        return volume;
+    }
+
+    canAddCargo(item) {
+        // Check if item can be added to cargo
+        if (this.getCurrentCargoVolume() + item.volume > this.cargoCapacity) {
+            return false;
+        }
+        return true;
+    }
+
+    addCargo(item) {
+        // Add item to cargo
+        if (!this.canAddCargo(item)) {
+            return;
+        }
+        this.cargo.push(item);
+    }
+
+    diminishingReturns(x) {
+        // This is a function that returns a value between 0 and 1
+        return 3 / (3 + x);
+    }
+
+    getShieldEmResistance() {
+        return this.shieldEmResistance;
+    }
+
+    getShieldThermalResistance() {
+        return this.shieldThermalResistance;
+    }
+
+    getShieldKineticResistance() {
+        return this.shieldKineticResistance;
+    }
+
+    getShieldExplosiveResistance() {
+        return this.shieldExplosiveResistance;
+    }
+
+    getArmorEmResistance() {
+        let r = this.armorEmResistance;
+        for (let i = 0; i < this.passiveArmorResistanceModules.length; i++) {
+            r *= (1 + this.passiveArmorResistanceModules[i].emResistance * this.diminishingReturns(i));
+        }
+        return r;
+    }
+
+    getArmorThermalResistance() {
+        let r = this.armorThermalResistance;
+        for (let i = 0; i < this.passiveArmorResistanceModules.length; i++) {
+            r *= (1 + this.passiveArmorResistanceModules[i].thermalResistance * this.diminishingReturns(i));
+        }
+        return r;
+    }
+
+    getArmorKineticResistance() {
+        let r = this.armorKineticResistance;
+        for (let i = 0; i < this.passiveArmorResistanceModules.length; i++) {
+            r *= (1 + this.passiveArmorResistanceModules[i].kineticResistance * this.diminishingReturns(i));
+        }
+        return r;
+    }
+
+    getArmorExplosiveResistance() {
+        let r = this.armorExplosiveResistance;
+        for (let i = 0; i < this.passiveArmorResistanceModules.length; i++) {
+            r *= (1 + this.passiveArmorResistanceModules[i].explosiveResistance * this.diminishingReturns(i));
+        }
+        return r;
+    }
+
+    getHullEmResistance() {
+        return this.hullEmResistance;
+    }
+
+    getHullThermalResistance() {
+        return this.hullThermalResistance;
+    }
+
+    getHullKineticResistance() {
+        return this.hullKineticResistance;
+    }
+
+    getHullExplosiveResistance() {
+        return this.hullExplosiveResistance;
     }
 
     jumpSystem(x, y) {
@@ -448,7 +568,11 @@ export default class Ship extends Entity {
         }
         
         // Calculate the damage to the shield
-        let potentialShieldDamage = EmDamage * (1 - this.shieldEmResistance) + ThermalDamage * (1 - this.shieldThermalResistance) + KineticDamage * (1 - this.shieldKineticResistance) + ExplosiveDamage * (1 - this.shieldExplosiveResistance);
+        let potentialShieldDamage = EmDamage * (1 - this.getShieldEmResistance());
+        potentialShieldDamage += ThermalDamage * (1 - this.getShieldThermalResistance());
+        potentialShieldDamage += KineticDamage * (1 - this.getShieldKineticResistance());
+        potentialShieldDamage += ExplosiveDamage * (1 - this.getShieldExplosiveResistance());
+
         let actualShieldDamage = Math.min(potentialShieldDamage, this.shield);
         // Calculate the total damage resisted by the shield
         let shieldResistedDamage = Math.min(totalDamage, this.shield) - actualShieldDamage;
@@ -472,7 +596,11 @@ export default class Ship extends Entity {
         }
 
         // Calculate the damage to the armor
-        let potentialArmorDamage = EmDamage * (1 - this.armorEmResistance) + ThermalDamage * (1 - this.armorThermalResistance) + KineticDamage * (1 - this.armorKineticResistance) + ExplosiveDamage * (1 - this.armorExplosiveResistance);
+        let potentialArmorDamage = EmDamage * (1 - this.getArmorEmResistance());
+        potentialArmorDamage += ThermalDamage * (1 - this.getArmorThermalResistance());
+        potentialArmorDamage += KineticDamage * (1 - this.getArmorKineticResistance());
+        potentialArmorDamage += ExplosiveDamage * (1 - this.getArmorExplosiveResistance());
+
         let actualArmorDamage = Math.min(potentialArmorDamage, this.armor);
         // Calculate the total damage resisted by the armor
         let armorResistedDamage = Math.min(totalDamage, this.armor) - actualArmorDamage;
@@ -496,7 +624,11 @@ export default class Ship extends Entity {
         }
 
         // Calculate the damage to the hull
-        let potentialHullDamage = EmDamage * (1 - this.hullEmResistance) + ThermalDamage * (1 - this.hullThermalResistance) + KineticDamage * (1 - this.hullKineticResistance) + ExplosiveDamage * (1 - this.hullExplosiveResistance);
+        let potentialHullDamage = EmDamage * (1 - this.getHullEmResistance());
+        potentialHullDamage += ThermalDamage * (1 - this.getHullThermalResistance());
+        potentialHullDamage += KineticDamage * (1 - this.getHullKineticResistance());
+        potentialHullDamage += ExplosiveDamage * (1 - this.getHullExplosiveResistance());
+
         let actualHullDamage = Math.min(potentialHullDamage, this.hull);
         
         console.log("actualHullDamage: " + actualHullDamage);

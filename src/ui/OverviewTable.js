@@ -355,7 +355,7 @@ export default class OverviewTable {
         // Draw the table
         this.graphics.clear();
         // black background
-        this.graphics.fillStyle(0x000000);
+        this.graphics.fillStyle(0x000000, 0.8);
         this.graphics.fillRect(this.x, this.y, this.width, this.height);
         // white border
         this.graphics.lineStyle(1, 0xffffff);

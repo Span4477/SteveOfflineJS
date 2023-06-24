@@ -8,6 +8,7 @@ import InputHandler from '../ui/InputHandler';
 import Enemy from '../entities/Enemy';
 import Overview from '../ui/Overview';
 import Galaxy from '../entities/Galaxy';
+import SideBar from '../ui/SideBar';
 
 export default class Space extends Phaser.Scene {
     constructor(scene) {
@@ -44,14 +45,14 @@ export default class Space extends Phaser.Scene {
         this.galaxy = new Galaxy(this, galaxyData, 'Eos');
 
         // Place the player at the center of the screen
-        this.player = new Player(this, this.screenToWorld, -AU, 0);
+        this.player = new Player(this, this.screenToWorld, 4000-AU, 2000);
 
         // create enemy
         this.enemy = new Enemy(this, this.screenToWorld, AU + 2000, AU - 800);
 
         this.gridLines = new GridLines(this);
         this.overview = new Overview(this, this.screenToWorld);
-
+        this.sideBar = new SideBar(this);
         // Create the status bars
         this.statusBars = new StatusBars(this, this.player);
 
@@ -76,7 +77,7 @@ export default class Space extends Phaser.Scene {
         // Update the statusBars
         this.statusBars.update();
         this.overview.update();
-
+        this.sideBar.update();
     }
 
 }

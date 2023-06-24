@@ -1,0 +1,44 @@
+{
+    "projectileTurrets" : [
+        {
+            "name" : "125mm Cannon",
+            "volume" : 5,
+            "damage" : 5,
+            "optimalRange" : 2500,
+            "rateOfFire" : 1,
+            "trackingSpeed" : 0.5,
+            "accuracy" : 0.5,
+            "powerGrid" : 1,
+            "cpu" : 3,
+            "slot" : "high"
+
+        }
+    ],
+    "activePropulsion" : [
+        {
+            "name" : "5MN Microwarpdrive",
+            "volume" : 10,
+            "speed" : 500,
+            "powerGrid" : 15,
+            "cpu" : 25,
+            "capacitorCost" : 45,
+            "capacitorPenalty" : 0.25,
+            "cycleTime" : 10,
+            "slot" : "medium",
+            "agilityPenalty" : 0.25 
+        }
+    ],
+    "passiveArmorResistance" : [
+        {
+            "name" : "Multispectrum Armor Coating",
+            "volume" : 5,
+            "emResistance" : 0.1,
+            "thermalResistance" : 0.1,
+            "kineticResistance" : 0.1,
+            "explosiveResistance" : 0.1,
+            "slot" : "low",
+            "powerGrid" : 1,
+            "cpu" : 0
+        }
+    ]
+}
