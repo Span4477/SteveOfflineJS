@@ -5,7 +5,7 @@ export default class OverviewTable {
         this.scene = scene;
         this.overviewItems = overviewItems;
         
-        this.columnLabels = ['Name', 'Type', 'Distance', 'Velocity', 'Angular', 'security'];
+        this.columnLabels = ['Name', 'Type', 'Distance', 'Velocity', 'Angular', 'Security'];
         this.sortIndex = 2;
         this.sortArrowSize = 5;
         this.ascending = true;
@@ -307,7 +307,7 @@ export default class OverviewTable {
                     case 'Angular':
                         text = item.angularVelocity;
                         break;
-                    case 'security':
+                    case 'Security':
                         text = item.security;
                         break;
                     default:
