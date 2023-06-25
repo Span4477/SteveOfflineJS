@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+import { colors } from '../utils/Colors.js';
+import { fontLight, fontDark } from '../utils/Fonts.js';
 
 export default class OverviewTable {
     constructor(scene, overviewItems) {
@@ -17,31 +19,14 @@ export default class OverviewTable {
         this.x = this.scene.game.config.width - this.width - 5;
         this.y = this.scene.game.config.height - 5 - this.height;
 
-        this.graphics = scene.add.graphics({ fillStyle: { color: 0xffffff } });  // White color
+        this.graphics = scene.add.graphics(); 
         this.graphics.setDepth(3);
         
         this.headerTexts = [];
-        this.headerFormat = { 
-            color: '#000000', 
-            fontSize: '16px', 
-            align: 'left', 
-            fontFamily: 'Courier', 
-            fontStyle: 'normal', 
-            stroke: '#000000', 
-            strokeThickness: 1 
-        
-        };
+        this.headerFormat = fontDark;
 
         this.dataTexts = [];
-        this.dataFormat = {
-            color: '#ffffff',
-            fontSize: '16px',
-            align: 'right',
-            fontFamily: 'Courier',
-            fontStyle: 'normal',
-            stroke: '#000000',
-            strokeThickness: 1
-        };
+        this.dataFormat = fontLight;
 
         this.rowRectangles = [];
         this.rowHoverIndex = -1;
@@ -56,7 +41,7 @@ export default class OverviewTable {
         // Create the column labels
         for (let i = 0; i < this.columnLabels.length; i++) {
             let label = this.columnLabels[i];
-            let textX = this.x + i * this.cellWidth;
+            let textX = this.x + i * this.cellWidth + 5;
             let textY = this.y + 10;
             let text = this.scene.add.text(textX, textY, label, this.headerFormat);
             text.setOrigin(0, 0.5);
@@ -224,10 +209,10 @@ export default class OverviewTable {
         for (let i = 0; i < this.columnLabels.length; i++) {
             let cellX = this.x + i * this.cellWidth;
             let cellY = this.y;
-            this.graphics.fillStyle(0xffffff);
+            this.graphics.fillStyle(colors.backgroundLight);
             this.graphics.fillRect(cellX, cellY, this.cellWidth - 1, this.cellHeight);
 
-            this.graphics.fillStyle(0x000000);
+            this.graphics.fillStyle(colors.textDark);
             // If the column is sorted, draw an arrow
             if (i === this.sortIndex) {
                 let arrowX = cellX + this.cellWidth - 10;
@@ -313,7 +298,7 @@ export default class OverviewTable {
                     default:
                         text = '';
                 }
-                this.graphics.fillStyle(0x000000);
+                this.graphics.fillStyle(colors.backgroundDark);
                 this.graphics.strokeRect(cellX, cellY, this.cellWidth - 1, this.cellHeight);
 
                 
@@ -355,10 +340,10 @@ export default class OverviewTable {
         // Draw the table
         this.graphics.clear();
         // black background
-        this.graphics.fillStyle(0x000000, 0.8);
+        this.graphics.fillStyle(colors.textDark, 0.8);
         this.graphics.fillRect(this.x, this.y, this.width, this.height);
         // white border
-        this.graphics.lineStyle(1, 0xffffff);
+        this.graphics.lineStyle(1, colors.border);
         this.graphics.strokeRect(this.x, this.y, this.width, this.height);
 
         this.drawHeader();

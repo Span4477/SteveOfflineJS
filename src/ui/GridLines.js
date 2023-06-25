@@ -1,3 +1,4 @@
+import { colors } from '../utils/Colors.js';
 
 // Create a class GridLines.
 // I would like to draw 5 white concentric circles on the screen. 
@@ -17,7 +18,7 @@ export default class GridLines {
 
         this.graphics = this.scene.add.graphics({
             lineStyle: {
-                color: 0xffffff
+                color: colors.border
             }
         });
         this.graphics.setDepth(3);

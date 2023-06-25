@@ -1,3 +1,5 @@
+import { colors } from '../utils/Colors.js';
+import { fontLight, fontDark } from '../utils/Fonts.js';
 
 export default class InventoryPanel {
     
@@ -9,31 +11,20 @@ export default class InventoryPanel {
         this.width = 600;
         this.height = 400;
         
+
         this.graphics = this.scene.add.graphics();
         this.graphics.setDepth(4);
 
-        this.backgroundColor = 0x000000;
-        this.borderColor = 0xffffff;
-        this.fontSize = 14;
-        this.fontFamily = 'Courier New';
+        this.backgroundColor = colors.backgroundDark;
+        this.borderColor = colors.border;
+        
 
-        this.labelFont = {
-            fontFamily: this.fontFamily,
-            fontSize: this.fontSize,
-            color: '#ffffff',
-            align: 'left'
-        };
+        this.labelFont = fontLight;
         this.labelText = 'Inventory'
         this.label = this.scene.add.text(0, 0, '', this.labelFont);
         this.label.setDepth(4);
         this.label.setOrigin(0, 0.5);
 
-        this.volumeFont = {
-            fontFamily: this.fontFamily,
-            fontSize: this.fontSize,
-            color: '#ffffff',
-            align: 'right'
-        };
         this.volumeText = this.scene.add.text(0, 0, '', this.labelFont);
         this.volumeText.setDepth(4);
         this.volumeText.setOrigin(1, 0.5);
@@ -43,17 +34,11 @@ export default class InventoryPanel {
 
         this.columnLabels = ['Name', 'Type', 'Quantity', 'Volume', 'Value'];
         this.columnWidths = [200, 100, 100, 100, 100];
-        this.columnFont = {
-            color: '#000000', 
-            fontSize: this.fontSize, 
-            align: 'left', 
-            fontFamily: this.fontFamily, 
-            fontStyle: 'normal'
-        };
+        this.columnFont = fontDark;
         this.cellHeight = 20;
         this.sortIndex = 0;
 
-        this.arrowColor = '#000000';
+        this.arrowColor = colors.textDark;
 
 
         this.headerTexts = [];
@@ -90,7 +75,7 @@ export default class InventoryPanel {
         for (let i = 0; i < this.columnLabels.length; i++) {
             let cellWidth = this.columnWidths[i];
             let cellY = this.y + this.cellHeight;
-            this.graphics.fillStyle(0xffffff);
+            this.graphics.fillStyle(colors.backgroundLight);
             this.graphics.fillRect(cellX, cellY, cellWidth - 1, this.cellHeight);
             this.headerTexts[i].setText(this.columnLabels[i]);
             this.graphics.fillStyle(this.arrowColor);
@@ -117,7 +102,7 @@ export default class InventoryPanel {
             let text = this.scene.add.text(this.x + 10, this.y + 30 + i * 20, item.name, this.labelFont);
             text.setDepth(4);
             text.setOrigin(0, 0.5);
-            this.graphics.fillStyle(0xffffff, 1);
+            this.graphics.fillStyle(this.borderColor, 1);
             this.graphics.strokeRect(this.x + 10, this.y + 30 + i * 20, this.width - 20, 20);
         }
     }

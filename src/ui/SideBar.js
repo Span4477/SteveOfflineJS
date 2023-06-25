@@ -1,4 +1,6 @@
 import InventoryPanel from "./InventoryPanel";
+import { colors } from '../utils/Colors.js';
+import { fontLight, fontDark } from '../utils/Fonts.js';
 
 export default class SideBar {
     constructor(scene) {
@@ -15,21 +17,16 @@ export default class SideBar {
         this.labelTips = ['Inventory', 'Ship', 'Skills', 'Map', 'Journal', 'Settings'];
         this.labels = ['I', 'S', 'K', 'M', 'J', 'O'];
         this.labelFont = {
-            fontFamily: 'Courier',
-            fontSize: 16,
-            color: '#ffffff',
+            fontFamily: fontLight.fontFamily,
+            fontSize: fontLight.fontSize,
+            color: colors.textLight2,
             align: 'center'
         };
         this.labelBoxes = [];
         this.labelTexts = [];
         this.labelIndex = -1;
 
-        this.hoverFont = { 
-            fontFamily: 'Courier', 
-            fontSize: 12, 
-            color: '#ffffff', 
-            align: 'left' 
-        };
+        this.hoverFont = fontLight;
         this.hoverIndex = -1;
         this.hoverText = this.scene.add.text(0, 0, '', this.hoverFont);
         this.hoverText.setDepth(this.depth + 1);
@@ -105,7 +102,7 @@ export default class SideBar {
         // draw black rectangle behind the hover text
         let hoverTextWidth = this.hoverText.width;
         let hoverTextHeight = this.hoverText.height;
-        this.graphics.fillStyle(0x000000, 0.8);
+        this.graphics.fillStyle(colors.backgroundDark, 0.8);
         this.graphics.fillRect(
             this.hoverText.x - 5,
             this.hoverText.y - hoverTextHeight / 2 - 5,
@@ -116,15 +113,15 @@ export default class SideBar {
 
     drawInvertedLabel(labelBox, labelText) {
 
-        this.graphics.fillStyle(0xffffff, 1);
+        this.graphics.fillStyle(colors.backgroundLight, 1);
         this.graphics.fillRect(labelBox.x, labelBox.y, labelBox.width, labelBox.height);
-        labelText.setColor('#000000');
+        labelText.setColor(colors.textDark2);
     }
 
     drawNormalLabel(labelBox, labelText) {
-        this.graphics.fillStyle(0x000000, 1);
+        this.graphics.fillStyle(colors.backgroundDark, 1);
         this.graphics.fillRect(labelBox.x, labelBox.y, labelBox.width, labelBox.height);
-        labelText.setColor('#ffffff');
+        labelText.setColor(colors.textLight2);
     }
 
     draw() {
@@ -144,7 +141,7 @@ export default class SideBar {
                 this.drawNormalLabel(labelBox, labelText);
             }
             //Draw a white border around the label box
-            this.graphics.lineStyle(1, 0xffffff, 1);
+            this.graphics.lineStyle(1, colors.border, 1);
             this.graphics.strokeRect(labelBox.x, labelBox.y, labelBox.width, labelBox.height);
 
         }
