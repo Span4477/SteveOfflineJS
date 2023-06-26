@@ -135,7 +135,7 @@ export default class SideBar {
             if (i == this.hoverIndex && !this.inventoryPanel.visible) {
                 this.drawInvertedLabel(labelBox, labelText);
                 this.drawHoverLabel(labelBox, i);
-            } else if (this.inventoryPanel.visible && i == 0) {
+            } else if (this.inventoryPanel.visible && i == 0 || i == this.hoverIndex) {
                 this.drawInvertedLabel(labelBox, labelText);
             } else {
                 this.drawNormalLabel(labelBox, labelText);

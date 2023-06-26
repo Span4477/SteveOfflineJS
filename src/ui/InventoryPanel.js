@@ -1,3 +1,4 @@
+import Phaser from 'phaser';
 import { colors } from '../utils/Colors.js';
 import { fontLight, fontDark } from '../utils/Fonts.js';
 
@@ -42,7 +43,7 @@ export default class InventoryPanel {
 
 
         this.headerTexts = [];
-        this.createHeaderTexts();
+        this.headerRects = [];
     }
 
     coordInInventoryPanel(x, y) {
@@ -59,13 +60,57 @@ export default class InventoryPanel {
         for (let i = 0; i < this.columnLabels.length; i++) {
             let cellWidth = this.columnWidths[i];
             let cellY = this.y + this.cellHeight * 3 / 2;
-            let text = this.scene.add.text(cellX + 5, cellY, '', this.columnFont);
-            text.setDepth(4);
+            let text = this.scene.add.text(cellX + 5, cellY, this.columnLabels[i], this.columnFont);
+            text.setDepth(5);
             text.setOrigin(0, 0.5);
             this.headerTexts.push(text);
+
+            let rect = this.scene.add.rectangle(cellX, cellY, cellWidth - 1, this.cellHeight);
+            rect.setOrigin(0, 0.5);
+            rect.setInteractive({ useHandCursor: true });
+            rect.on('pointerdown', () => {
+                this.sortColumn(i);
+            });
+            rect.setDepth(4);
+            this.headerRects.push(rect)
+
             cellX += cellWidth;
         }
+    }
 
+    deleteHeaderTexts() {
+        for (let i = 0; i < this.headerTexts.length; i++) {
+            this.headerTexts[i].destroy();
+            this.headerRects[i].destroy();
+        }
+        this.headerTexts = [];
+        this.headerRects = [];
+    }
+
+    drawSortArrow(cellX, cellY, cellWidth) {
+        let arrowX = cellX + cellWidth - 10;
+        let arrowY = cellY + this.cellHeight / 2;
+        let arrowSize = 5;
+        if (this.ascending) {
+            //arrow pointing up
+            this.graphics.fillTriangle(arrowX, arrowY - arrowSize, arrowX + arrowSize, arrowY + arrowSize, arrowX - arrowSize, arrowY + arrowSize);
+        } else {
+            //arrow pointing down
+            this.graphics.fillTriangle(arrowX, arrowY + arrowSize, arrowX + arrowSize, arrowY - arrowSize, arrowX - arrowSize, arrowY - arrowSize);
+        }
+    }
+
+    
+    sortColumn(columnIndex) {
+        // Sort the overview items by the column
+        if (columnIndex === this.sortIndex) {
+            // Same column, reverse the sort order
+            this.ascending = !this.ascending;
+        } else {
+            // Different column, sort ascending
+            this.ascending = true;
+        }
+        this.sortIndex = columnIndex;
     }
     
     drawHeader() {
@@ -77,20 +122,11 @@ export default class InventoryPanel {
             let cellY = this.y + this.cellHeight;
             this.graphics.fillStyle(colors.backgroundLight);
             this.graphics.fillRect(cellX, cellY, cellWidth - 1, this.cellHeight);
-            this.headerTexts[i].setText(this.columnLabels[i]);
+            
             this.graphics.fillStyle(this.arrowColor);
             // If the column is sorted, draw an arrow
             if (i === this.sortIndex) {
-                let arrowX = cellX + cellWidth - 10;
-                let arrowY = cellY + this.cellHeight / 2;
-                let arrowSize = 5;
-                if (this.ascending) {
-                    //arrow pointing up
-                    this.graphics.fillTriangle(arrowX, arrowY - arrowSize, arrowX + arrowSize, arrowY + arrowSize, arrowX - arrowSize, arrowY + arrowSize);
-                } else {
-                    //arrow pointing down
-                    this.graphics.fillTriangle(arrowX, arrowY + arrowSize, arrowX + arrowSize, arrowY - arrowSize, arrowX - arrowSize, arrowY - arrowSize);
-                }
+                this.drawSortArrow(cellX, cellY, cellWidth);
             }
             cellX += cellWidth;
         }
@@ -138,16 +174,16 @@ export default class InventoryPanel {
     show() {
         this.visible = true;
         this.label.setText(this.labelText);
+        this.createHeaderTexts();
+
     }
 
     hide() {
         this.visible = false;
         this.label.setText('');
         this.volumeText.setText('');
+        this.deleteHeaderTexts();
         this.graphics.clear();
-        for (let i = 0; i < this.headerTexts.length; i++) {
-            this.headerTexts[i].setText('');
-        }
     }
 
     update() {
