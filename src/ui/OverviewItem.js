@@ -17,6 +17,22 @@ export default class OverviewItem {
 
     }
 
+    getValue(label) {
+        if (label === 'Type') {
+            return this.type;
+        } else if (label === 'Name') {
+            return this.name;
+        } else if (label === 'Distance') {
+            return this.distance;
+        } else if (label === 'Velocity') {
+            return this.velocity;
+        } else if (label === 'Angular') {
+            return this.angularVelocity;
+        } else if (label === 'Security') {
+            return this.security;
+        }
+    }
+
     getTypeText() {
         if (this.gameObjectType === 'planet') {
             return 'Planet';

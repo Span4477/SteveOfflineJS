@@ -7,7 +7,8 @@ export default class Overview {
         this.scene = scene;
         this.overviewItems = [];
         
-        this.table = new OverviewTable(scene, this.overviewItems);
+        this.table = new OverviewTable(scene);
+        
     }
 
     clear() {
@@ -24,7 +25,7 @@ export default class Overview {
     }
     
     coordInOverview(x, y) {
-        return this.table.coordInOverview(x, y);
+        return this.table.containsPoint(x, y);
     }
 
     update() {
@@ -34,7 +35,9 @@ export default class Overview {
         this.addGalaxy();
 
         this.table.update(this.overviewItems);
-
+        if (!this.table.visible) {
+            this.table.show();
+        }
     }
 
     addGalaxy() {
