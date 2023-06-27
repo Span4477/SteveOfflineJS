@@ -263,9 +263,7 @@ export default class Table {
         this.data = data;
 
         if (this.visible) {
-            // if (this.sortIndex !== this.newSortIndex) {
             this.sortData();
-            // }
             this.draw();
         }
 

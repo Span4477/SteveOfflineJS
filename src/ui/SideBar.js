@@ -39,7 +39,7 @@ export default class SideBar {
     coordInSideBar(x, y) {
         // Check if the x and y coordinates are within the sidebar
         let overPanel = x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height;
-        let overInventory = this.inventoryPanel.coordInInventoryPanel(x, y);
+        let overInventory = this.inventoryPanel.containsPoint(x, y);
         return overPanel || overInventory;
 
     }

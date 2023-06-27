@@ -1,25 +1,21 @@
 import Phaser from 'phaser';
 import { colors } from '../utils/Colors.js';
 import { fontLight, fontDark } from '../utils/Fonts.js';
+import Table from './Table.js';
 
-export default class InventoryPanel {
+
+export default class InventoryPanel extends Table{
     
     constructor(scene) {
-        this.scene = scene;
+        super(scene, 0, 0, 0, 0);
         this.player = scene.player;
         this.x = 25;
-        this.y = 0;
+        this.y = 20;
         this.width = 600;
         this.height = 400;
+
+        this.topBarHeight = 20;
         
-
-        this.graphics = this.scene.add.graphics();
-        this.graphics.setDepth(4);
-
-        this.backgroundColor = colors.backgroundDark;
-        this.borderColor = colors.border;
-        
-
         this.labelFont = fontLight;
         this.labelText = 'Inventory'
         this.label = this.scene.add.text(0, 0, '', this.labelFont);
@@ -30,168 +26,126 @@ export default class InventoryPanel {
         this.volumeText.setDepth(4);
         this.volumeText.setOrigin(1, 0.5);
 
-        this.visible = false;
-        this.ascending = true;
-
         this.columnLabels = ['Name', 'Type', 'Quantity', 'Volume', 'Value'];
         this.columnWidths = [200, 100, 100, 100, 100];
-        this.columnFont = fontDark;
-        this.cellHeight = 20;
-        this.sortIndex = 0;
-
-        this.arrowColor = colors.textDark;
-
-
-        this.headerTexts = [];
-        this.headerRects = [];
+        this.columnSorters = [
+            this.sortByName,
+            this.sortByType,
+            this.sortByQuantity,
+            this.sortByVolume,
+            this.sortByValue
+        ];
     }
 
-    coordInInventoryPanel(x, y) {
+    containsPoint(x, y) {
         // Check if the x and y coordinates are within the sidebar
-        if (!this.visible) {
-            return false;
-        }
-        return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height;
-        
+        return x >= this.x && x <= this.x + this.width && y >= this.y - this.topBarHeight && y <= this.y - this.topBarHeight + this.height;
     }
-
-    createHeaderTexts() {
-        let cellX = this.x;
-        for (let i = 0; i < this.columnLabels.length; i++) {
-            let cellWidth = this.columnWidths[i];
-            let cellY = this.y + this.cellHeight * 3 / 2;
-            let text = this.scene.add.text(cellX + 5, cellY, this.columnLabels[i], this.columnFont);
-            text.setDepth(5);
-            text.setOrigin(0, 0.5);
-            this.headerTexts.push(text);
-
-            let rect = this.scene.add.rectangle(cellX, cellY, cellWidth - 1, this.cellHeight);
-            rect.setOrigin(0, 0.5);
-            rect.setInteractive({ useHandCursor: true });
-            rect.on('pointerdown', () => {
-                this.sortColumn(i);
-            });
-            rect.setDepth(4);
-            this.headerRects.push(rect)
-
-            cellX += cellWidth;
+    
+    sortByName(a, b) {
+        // Sort by name
+        let nameA = a.gameObject.name.toUpperCase();
+        let nameB = b.gameObject.name.toUpperCase();
+        if (nameA < nameB) {
+            return -1;
         }
-    }
-
-    deleteHeaderTexts() {
-        for (let i = 0; i < this.headerTexts.length; i++) {
-            this.headerTexts[i].destroy();
-            this.headerRects[i].destroy();
+        if (nameA > nameB) {
+            return 1
         }
-        this.headerTexts = [];
-        this.headerRects = [];
-    }
-
-    drawSortArrow(cellX, cellY, cellWidth) {
-        let arrowX = cellX + cellWidth - 10;
-        let arrowY = cellY + this.cellHeight / 2;
-        let arrowSize = 5;
-        if (this.ascending) {
-            //arrow pointing up
-            this.graphics.fillTriangle(arrowX, arrowY - arrowSize, arrowX + arrowSize, arrowY + arrowSize, arrowX - arrowSize, arrowY + arrowSize);
-        } else {
-            //arrow pointing down
-            this.graphics.fillTriangle(arrowX, arrowY + arrowSize, arrowX + arrowSize, arrowY - arrowSize, arrowX - arrowSize, arrowY - arrowSize);
-        }
+        let valueA = a.value;
+        let valueB = b.value;
+        return valueA - valueB;
     }
 
     
-    sortColumn(columnIndex) {
-        // Sort the overview items by the column
-        if (columnIndex === this.sortIndex) {
-            // Same column, reverse the sort order
-            this.ascending = !this.ascending;
-        } else {
-            // Different column, sort ascending
-            this.ascending = true;
+    sortByType(a, b) {
+        // Sort by type
+        let typeA = a.gameObjectType.toUpperCase();
+        let typeB = b.gameObjectType.toUpperCase();
+        if (typeA < typeB) {
+            return -1;
         }
-        this.sortIndex = columnIndex;
+        if (typeA > typeB) {
+            return 1
+        }
+        let valueA = a.value;
+        let valueB = b.value;
+        return valueA - valueB;
     }
     
-    drawHeader() {
-
-        let cellX = this.x;
-        //Draw white rectangles for the header cells
-        for (let i = 0; i < this.columnLabels.length; i++) {
-            let cellWidth = this.columnWidths[i];
-            let cellY = this.y + this.cellHeight;
-            this.graphics.fillStyle(colors.backgroundLight);
-            this.graphics.fillRect(cellX, cellY, cellWidth - 1, this.cellHeight);
-            
-            this.graphics.fillStyle(this.arrowColor);
-            // If the column is sorted, draw an arrow
-            if (i === this.sortIndex) {
-                this.drawSortArrow(cellX, cellY, cellWidth);
-            }
-            cellX += cellWidth;
+    
+    sortByQuantity(a, b) {
+        // Sort by type
+        let quantityA = a.quantity.toUpperCase();
+        let quantityB = b.quantity.toUpperCase();
+        if (quantityA < quantityB) {
+            return -1;
         }
+        if (quantityA > quantityB) {
+            return 1
+        }
+        let valueA = a.value;
+        let valueB = b.value;
+        return valueA - valueB;
+    }
+    
+    sortByVolume(a, b) {
+        // Sort by type
+        let volumeA = a.volume.toUpperCase();
+        let volumeB = b.volume.toUpperCase();
+        if (volumeA < volumeB) {
+            return -1;
+        }
+        if (volumeA > volumeB) {
+            return 1
+        }
+        let valueA = a.value;
+        let valueB = b.value;
+        return valueA - valueB;
+    }
+    
+    sortByValue(a, b) {
+        // Sort by type
+        let valueA = a.value;
+        let valueB = b.value;
+        if (valueA < valueB) {
+            return -1;
+        }
+        if (valueA > valueB) {
+            return 1
+        }
+        let nameA = a.gameObject.name.toUpperCase();
+        let nameB = b.gameObject.name.toUpperCase();
+        return nameA < nameB ? -1 : 1;
     }
 
-    drawItems() {
-        for (let i = 0; i < this.player.cargo.length; i++) {
-            let item = this.player.inventory[i];
-            let text = this.scene.add.text(this.x + 10, this.y + 30 + i * 20, item.name, this.labelFont);
-            text.setDepth(4);
-            text.setOrigin(0, 0.5);
-            this.graphics.fillStyle(this.borderColor, 1);
-            this.graphics.strokeRect(this.x + 10, this.y + 30 + i * 20, this.width - 20, 20);
-        }
-    }
 
     draw() {
-        this.graphics.clear();
-        // draw black background for inventory panel
+        super.draw();
+        
+        // draw black background for top bar
         this.graphics.fillStyle(this.backgroundColor, 0.9);
-        this.graphics.fillRect(this.x, this.y, this.width, this.height);
-        // draw white border around inventory panel
+        this.graphics.fillRect(this.x, this.y - this.topBarHeight, this.width, this.topBarHeight);
+        // draw white border around top bar
         this.graphics.lineStyle(1, this.borderColor, 1);
-        this.graphics.strokeRect(this.x, this.y, this.width, this.height);
-        this.label.setPosition(this.x + 10, this.y + 10);
-        // draw white line below header
-        this.graphics.fillStyle(this.borderColor, 1);
-        this.graphics.strokeRect(this.x, this.y + this.cellHeight, this.width, 1);
+        this.graphics.strokeRect(this.x, this.y - this.topBarHeight, this.width, this.topBarHeight);
+        // draw the label
+        this.label.setText(this.labelText);
+        this.label.setPosition(this.x + this.topBarHeight / 2, this.y - this.topBarHeight / 2);
         // draw volume text
-        this.volumeText.setPosition(this.x + this.width - 5, this.y + 10);
+        this.volumeText.setPosition(this.x + this.width - 5, this.y - this.topBarHeight / 2);
         this.volumeText.setText('Volume: ' + this.player.getCurrentCargoVolume().toFixed(1) + '/' + this.player.cargoCapacity.toFixed(1));
         
-        this.drawHeader();
-
-    }
-
-    toggle() {
-        if (this.visible) {
-            this.hide();
-        } else {
-            this.show();
-        }
-    }
-
-    show() {
-        this.visible = true;
-        this.label.setText(this.labelText);
-        this.createHeaderTexts();
-
-    }
-
-    hide() {
-        this.visible = false;
-        this.label.setText('');
-        this.volumeText.setText('');
-        this.deleteHeaderTexts();
-        this.graphics.clear();
     }
 
     update() {
-
+        super.update([]); // TODO get the player's inventory
         if (this.visible) {
-            this.draw();
+            this.volumeText.setVisible(true);
+            this.label.setVisible(true);
+        } else {
+            this.volumeText.setVisible(false);
+            this.label.setVisible(false);
         }
-
     }
-
 }
