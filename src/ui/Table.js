@@ -109,6 +109,17 @@ export default class Table {
         this.headerTexts = [];
         this.headerRects = [];
     }
+
+    deleteDataTexts() {
+        for (let i = 0; i < this.dataTexts.length; i++) {
+            this.dataTexts[i].destroy();
+        }
+        for (let i = 0; i < this.rowRectangles.length; i++) {
+            this.rowRectangles[i].destroy();
+        }
+        this.dataTexts = [];
+        this.rowRectangles = [];
+    }
     
     sortColumn(columnIndex) {
         // Input handler for sorting the columns
@@ -256,6 +267,7 @@ export default class Table {
     hide() {
         this.visible = false;
         this.deleteHeaderTexts();
+        this.deleteDataTexts();
         this.graphics.clear();
     }
 
