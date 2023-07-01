@@ -11,6 +11,7 @@ export default class Entity extends Phaser.GameObjects.Sprite {
 
         // Add this object to the scene
         scene.add.existing(this);
+        this.setDepth(2);
 
         this.graphics = this.scene.add.graphics({ lineStyle: { color: 0xffffff } });  // White color
         this.graphics.setDepth(2);
