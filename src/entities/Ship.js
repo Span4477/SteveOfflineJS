@@ -1,30 +1,30 @@
 import Entity from './Entity.js';
 
 export default class Ship extends Entity {
-    constructor(scene, x, y) {
-        super(scene, x, y, 'Ship');
+    constructor(scene, screenToWorld, x, y, data) {
+        super(scene, screenToWorld, x, y, 'Ship', data);
 
         // Custom properties for ship
         // e.g., this.speed = 100;
-        this.hull = 100;
-        this.maxHull = 100;
-        this.armor = 100;
-        this.maxArmor = 100;
-        this.shield = 25;
-        this.maxShield = 100;
-        this.shieldRechargeTime = 1000 * 60 * 3;  // 1000 = 1 second
-        this.capacitor = 0;
-        this.maxCapacitor = 100;
-        this.capacitorRechargeTime = 1000 * 10;  // 1000 = 1 second
-        this.speed = this.getSpeed();
-        this.maxSpeed = 500;
+        this.hull = data.maxHull;
+        this.maxHull = data.maxHull;
+        this.armor = data.maxArmor;
+        this.maxArmor = data.maxArmor;
+        this.shield = data.maxShield;
+        this.maxShield = data.maxShield;
+        this.shieldRechargeTime = 1000 * data.shieldRechargeTime;  // 1000 = 1 second
+        this.capacitor = data.maxCapacitor;
+        this.maxCapacitor = data.maxCapacitor;
+        this.capacitorRechargeTime = 1000 * data.capacitorRechargeTime;  // 1000 = 1 second
+        this.speed = 0;
+        this.maxSpeed = data.maxSpeed;
         this.approach = new Phaser.Math.Vector2(x, y);
-        this.inertiaModifier = 5;
-        this.warpAgility = 5
-        this.warpSpeedAU = 1;
-        this.capacitorToWarp = 25;
+        this.inertiaModifier = data.inertiaModifier;
+        this.warpAgility = data.warpAgility;
+        this.warpSpeedAU = data.warpSpeedAU;
+        this.capacitorToWarp = data.capacitorToWarp;
         this.moveState = 'stop';
-        this.name = 'McShipface';
+        this.name = data.name;
         this.security = 5;
         
         this.warpStartX = 0;
@@ -32,42 +32,41 @@ export default class Ship extends Entity {
         this.warpDuration = 0;
 
         // resistances
-        this.shieldEmResistance = 0.0;
-        this.shieldThermalResistance = 0.2;
-        this.shieldKineticResistance = 0.4;
-        this.shieldExplosiveResistance = 0.6;
-        this.armorEmResistance = 0.6;
-        this.armorThermalResistance = 0.4;
-        this.armorKineticResistance = 0.2;
-        this.armorExplosiveResistance = 0.0;
-        this.hullEmResistance = 0.0;
-        this.hullThermalResistance = 0.0;
-        this.hullKineticResistance = 0.0;
-        this.hullExplosiveResistance = 0.0;
+        this.shieldEmResistance = data.shieldEmResistance;
+        this.shieldThermalResistance = data.shieldThermalResistance;
+        this.shieldKineticResistance = data.shieldKineticResistance;
+        this.shieldExplosiveResistance = data.shieldExplosiveResistance;
+        this.armorEmResistance = data.armorEmResistance;
+        this.armorThermalResistance = data.armorThermalResistance;
+        this.armorKineticResistance = data.armorKineticResistance;
+        this.armorExplosiveResistance = data.armorExplosiveResistance;
+        this.hullEmResistance = data.hullEmResistance;
+        this.hullThermalResistance = data.hullThermalResistance;
+        this.hullKineticResistance = data.hullKineticResistance;
+        this.hullExplosiveResistance = data.hullExplosiveResistance;
 
         // Fitting
-        this.maxHighSlots = 3;
-        this.maxMidSlots = 3;
-        this.maxLowSlots = 3;
-        this.maxRigSlots = 3;
+        this.maxHighSlots = data.maxHighSlots;
+        this.maxMidSlots = data.maxMidSlots;
+        this.maxLowSlots = data.maxLowSlots;
+        this.maxRigSlots = data.maxRigSlots;
 
         this.highSlots = 0;
         this.midSlots = 0;
         this.lowSlots = 0;
         this.rigSlots = 0;
 
-        this.rigSize = 's';
-        this.maxRigPoints = 400;
+        this.rigSize = data.rigSize;
+        this.maxRigPoints = data.maxRigPoints;
 
-        this.maxPowergrid = 41;
-        this.maxCPU = 130;
+        this.maxPowergrid = data.maxPowergrid;
+        this.maxCPU = data.maxCPU;
 
         this.powergrid = 0;
         this.cpu = 0;
 
-
         // Cargo
-        this.cargoCapacity = 500;
+        this.cargoCapacity = data.cargoCapacity;
         this.cargo = [];
 
         // Modules
@@ -77,6 +76,22 @@ export default class Ship extends Entity {
         this.moveStateInput = this.moveState;
         this.approachXInput = this.approach.x;
         this.approachYInput = this.approach.y;
+
+        this.shipAngle = - Math.PI / 2;
+
+    }
+
+    rotateSprite() {
+        //rotate the sprite so it points in the direction of the velocity
+
+        // get the angle of the velocity vector
+        if (this.velocity.x == 0 && this.velocity.y == 0) {
+            return;
+        }
+        let angle = Math.atan2(this.velocity.y, this.velocity.x);
+        angle += Math.PI / 2;
+        this.shipAngle = angle;
+        this.setRotation(angle);
 
     }
 

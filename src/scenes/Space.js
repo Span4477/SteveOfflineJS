@@ -9,6 +9,7 @@ import Enemy from '../entities/Enemy';
 import Overview from '../ui/Overview';
 import Galaxy from '../entities/Galaxy';
 import SideBar from '../ui/SideBar';
+import {icons} from '../utils/Icons';
 
 export default class Space extends Phaser.Scene {
     constructor(scene) {
@@ -18,19 +19,14 @@ export default class Space extends Phaser.Scene {
 
     preload ()
     {
-        //images
-        this.load.image('thrust', 'assets/thrust.png');
-        this.load.image('gate1', 'assets/gate1.png');
-        this.load.image('planet1', 'assets/planet1.png');
-        this.load.image('planet2', 'assets/planet2.png');
-        this.load.image('planet3', 'assets/planet3.png');
-        this.load.image('planet4', 'assets/planet4.png');
-        this.load.image('planet5', 'assets/planet5.png');
-        this.load.image('star1', 'assets/star1.png');
-        this.load.image('star2', 'assets/star2.png');
+        //icons
+        for (let i = 0; i < icons.length; i++) {
+            this.load.image(icons[i].key, icons[i].path);
+        }
 
         //json
         this.load.json('galaxy', 'assets/galaxy.json');
+        this.load.json('ships', 'assets/ships.json');
 
     }
 
@@ -44,11 +40,13 @@ export default class Space extends Phaser.Scene {
         let galaxyData = this.cache.json.get('galaxy');
         this.galaxy = new Galaxy(this, galaxyData, 'Eos');
 
+
+        let shipData = this.cache.json.get('ships');
         // Place the player at the center of the screen
-        this.player = new Player(this, this.screenToWorld, 4000-AU, 2000);
+        this.player = new Player(this, this.screenToWorld, 4000-AU, 2000, shipData.playerShips[0]);
 
         // create enemy
-        this.enemy = new Enemy(this, this.screenToWorld, AU + 2000, AU - 800);
+        this.enemy = new Enemy(this, this.screenToWorld, AU + 2000, AU - 800, shipData.enemyShips[0]);
 
         this.gridLines = new GridLines(this);
         this.overview = new Overview(this, this.screenToWorld);

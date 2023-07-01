@@ -3,7 +3,6 @@ export default class Celestial extends Phaser.GameObjects.Sprite {
         super(scene, 0, 0, data.image);
         const AU = 149597870700; // 1 AU in meters
 
-         
         this.screenRadius = this.texture.source[0].width / 2;
         
         this.position = new Phaser.Math.Vector2(data.position[0] * AU, data.position[1] * AU);
@@ -17,12 +16,13 @@ export default class Celestial extends Phaser.GameObjects.Sprite {
         scene.add.existing(this);
 
         this.setDepth(1);
+        this.setScale(0.5);
     }
 
     update() {
 
         // Update the screen position
-        let screenPosition = this.scene.screenToWorld.backgroundToScreen(this.position.x, this.position.y, this.radius, this.screenRadius);
+        let screenPosition = this.scene.screenToWorld.toScreenCoordinates(this.position.x, this.position.y);
         this.setPosition(screenPosition.x, screenPosition.y);
 
     }

@@ -211,8 +211,13 @@ export default class Table {
         // Remove any extra text items
         for (let i = dataTextIndex + 1; i < this.dataTexts.length; i++) {
             this.dataTexts[i].destroy();
+        }
+        // remove any extra row rectangles
+        for (let i = this.data.length; i < this.rowRectangles.length; i++) {
             this.rowRectangles[i].destroy();
         }
+        
+
     }
     
     drawHeader() {

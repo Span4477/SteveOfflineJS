@@ -3,28 +3,22 @@
 import Ship from './Ship.js';
 
 export default class Player extends Ship {
-    constructor(scene, screenToWorld, x, y) {
-        super(scene, x, y);
-        this.scene = scene;
-        this.screenToWorld = screenToWorld;
-        // Create the graphics for the player ship
-        this.graphics = this.scene.add.graphics({ lineStyle: { color: 0xffffff } });  // White color
-        this.graphics.setDepth(2);
+    constructor(scene, screenToWorld, x, y, data) {
+        super(scene, screenToWorld, x, y, data);
 
-        this.triangleLength = 10;
+        // Create the graphics for the player ship
         
         this.approachText = this.scene.add.text(0, 0, 'Approach', { color: '#ffffff', fontSize: '12px' }).setOrigin(0.5, 0.5);
         this.approachText.setDepth(3);
         this.approachText.setVisible(false);
 
-        this.shipAngle = - Math.PI / 2;
-        
+        this.lineBuffer = 10;
 
     }
 
     drawApproachLine(fromX, fromY, toX, toY) {
-        let lineX = fromX + 2 * this.triangleLength * Math.cos(Math.atan2(toY - fromY, toX - fromX));
-        let lineY = fromY + 2 * this.triangleLength * Math.sin(Math.atan2(toY - fromY, toX - fromX));
+        let lineX = fromX + 2 * this.lineBuffer * Math.cos(Math.atan2(toY - fromY, toX - fromX));
+        let lineY = fromY + 2 * this.lineBuffer * Math.sin(Math.atan2(toY - fromY, toX - fromX));
 
         // do not draw the line if the toX, toY is closer to the ship than the lineX, lineY
         if (Phaser.Math.Distance.Between(fromX, fromY, toX, toY) < Phaser.Math.Distance.Between(fromX, fromY, lineX, lineY)) {
@@ -49,28 +43,6 @@ export default class Player extends Ship {
         this.approachText.setText(distanceText);
         this.approachText.setVisible(true);
     }
-    drawShipTriangle(x, y) {
-        // Draw the ship as a triangle at the ship's position
-        // Rotate the triangle to point in the direction of the velocity
-        this.graphics.beginPath();
-        if (this.speed != 0) {
-            this.shipAngle = Math.atan2(this.velocity.y, this.velocity.x);
-        }
-        let x1 = x + this.triangleLength * Math.cos(this.shipAngle);
-        let x2 = x + this.triangleLength * Math.cos(this.shipAngle + 2 * Math.PI / 3);
-        let x3 = x + this.triangleLength * Math.cos(this.shipAngle + 4 * Math.PI / 3);
-        let y1 = y + this.triangleLength * Math.sin(this.shipAngle);
-        let y2 = y + this.triangleLength * Math.sin(this.shipAngle + 2 * Math.PI / 3);
-        let y3 = y + this.triangleLength * Math.sin(this.shipAngle + 4 * Math.PI / 3);
-
-        this.graphics.moveTo(x1, y1);
-        this.graphics.lineTo(x2, y2);
-        this.graphics.lineTo(x3, y3);
-        this.graphics.lineTo(x1, y1);
-
-        this.graphics.strokePath();
-        this.graphics.closePath();
-    }
 
     draw() {
 
@@ -78,8 +50,6 @@ export default class Player extends Ship {
         this.graphics.clear();
 
         let screenCoordinates = this.screenToWorld.toScreenCoordinates(this.position.x, this.position.y);
-
-        this.drawShipTriangle(screenCoordinates.x, screenCoordinates.y);
 
         // If the moveState is 'approach', draw a line from the ship to the approach point.
         // The start of the line should be offset from the ship
@@ -164,11 +134,12 @@ export default class Player extends Ship {
 
         this.setSpeed();
         this.updateMovementState(delta);
+        this.rotateSprite();
 
         this.scene.screenToWorld.centerOnPlayer(this.position.x, this.position.y);
 
         this.draw();
-
+        super.update();
 
     }
 }
