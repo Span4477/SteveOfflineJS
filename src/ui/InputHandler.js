@@ -23,10 +23,10 @@ export default class InputHandler {
     }
 
     handlePointer(pointer) {
-        if (this.scene.overview.coordInOverview(pointer.x, pointer.y)) {
+        if (this.scene.overview.containsPoint(pointer.x, pointer.y)) {
             return;
         }
-        if (this.scene.sideBar.coordInSideBar(pointer.x, pointer.y)) {
+        if (this.scene.sideBar.containsPoint(pointer.x, pointer.y)) {
             return;
         }
         const screenX = pointer.x;

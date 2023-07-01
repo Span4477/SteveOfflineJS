@@ -39,6 +39,9 @@ export default class InventoryPanel extends Table{
 
     containsPoint(x, y) {
         // Check if the x and y coordinates are within the sidebar
+        if (!this.visible) {
+            return false;
+        }
         return x >= this.x && x <= this.x + this.width && y >= this.y - this.topBarHeight && y <= this.y - this.topBarHeight + this.height;
     }
     

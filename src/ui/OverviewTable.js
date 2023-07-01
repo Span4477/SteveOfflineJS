@@ -99,8 +99,8 @@ export default class OverviewTable extends Table{
         return securityA - securityB;
     }
 
-    update(data) {
-        super.update(data);
+    update() {
+        super.update(this.data);
         this.checkGateHover();
     }
 
@@ -118,7 +118,7 @@ export default class OverviewTable extends Table{
 
     onRowClick() {
         // Clicking on a row should set the approach point
-        let item = this.scene.overview.overviewItems[this.scene.overview.table.rowHoverIndex];
+        let item = this.scene.overview.getHoverItem();
 
         this.scene.player.setApproach(
             item.gameObject.position.x,
