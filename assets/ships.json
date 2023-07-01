@@ -1,6 +1,6 @@
 {
-    "playerShips" : [
-        {
+    "playerShips" : {
+        "rebel1" : {
             "name" : "Rebel 1",
             "image" : "ship1",
             "maxHull" : 100,
@@ -36,9 +36,9 @@
             "maxCPU" : 130,
             "cargoCapacity" : 500
         }
-    ],
-    "enemyShips" : [
-        {
+    },
+    "enemyShips" : {
+        "ss1" : {
             "name" : "SS 1",
             "image" : "e1",
             "maxHull" : 50,
@@ -74,5 +74,5 @@
             "maxCPU" : 130,
             "cargoCapacity" : 500
         }
-    ]
+    }
 }

@@ -19,7 +19,7 @@ export default class Space extends Phaser.Scene {
 
     preload ()
     {
-        //icons
+        //images
         for (let i = 0; i < icons.length; i++) {
             this.load.image(icons[i].key, icons[i].path);
         }
@@ -43,10 +43,10 @@ export default class Space extends Phaser.Scene {
 
         let shipData = this.cache.json.get('ships');
         // Place the player at the center of the screen
-        this.player = new Player(this, this.screenToWorld, 4000-AU, 2000, shipData.playerShips[0]);
+        this.player = new Player(this, this.screenToWorld, 4000-AU, 2000, shipData.playerShips.rebel1);
 
         // create enemy
-        this.enemy = new Enemy(this, this.screenToWorld, AU + 2000, AU - 800, shipData.enemyShips[0]);
+        this.enemy = new Enemy(this, this.screenToWorld, AU + 2000, AU - 800, shipData.enemyShips.ss1);
 
         this.gridLines = new GridLines(this);
         this.overview = new Overview(this, this.screenToWorld);
