@@ -10,6 +10,7 @@ import Overview from '../ui/Overview';
 import Galaxy from '../entities/Galaxy';
 import SideBar from '../ui/SideBar';
 import {icons} from '../utils/Icons';
+import EntityManager from '../entities/EntityManager';
 
 export default class Space extends Phaser.Scene {
     constructor(scene) {
@@ -32,21 +33,15 @@ export default class Space extends Phaser.Scene {
 
     create() {
         
-        const AU = 149597870700; // 1 AU in meters
-        
         // Initialize ScreenToWorld
         this.screenToWorld = new ScreenToWorld(this.game.config.width, this.game.config.height, 10000);
 
         let galaxyData = this.cache.json.get('galaxy');
-        this.galaxy = new Galaxy(this, galaxyData, 'Eos');
-
-
         let shipData = this.cache.json.get('ships');
-        // Place the player at the center of the screen
-        this.player = new Player(this, this.screenToWorld, 4000-AU, 2000, shipData.playerShips.rebel1);
 
-        // create enemy
-        this.enemy = new Enemy(this, this.screenToWorld, AU + 2000, AU - 800, shipData.enemyShips.ss1);
+        this.entityManager = new EntityManager(this, galaxyData, shipData);
+        this.player = this.entityManager.getPlayer();
+        this.galaxy = this.entityManager.getGalaxy();
 
         this.gridLines = new GridLines(this);
         this.overview = new Overview(this, this.screenToWorld);
@@ -67,10 +62,8 @@ export default class Space extends Phaser.Scene {
         // Here goes the game logic that needs to run every frame
 
         this.gridLines.draw(this.screenToWorld);
-        this.player.update();
-        this.enemy.update();
 
-        this.galaxy.update();
+        this.entityManager.update();
 
         // Update the statusBars
         this.statusBars.update();

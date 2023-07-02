@@ -64,7 +64,7 @@
                 {
                     "name": "Polemos 3",
                     "image" : "p5",
-                    "position": [0, 1],
+                    "position": [1, 4],
                     "radius" : 2500000,
                     "security" : -1
                 }

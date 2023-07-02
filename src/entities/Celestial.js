@@ -1,23 +1,20 @@
-export default class Celestial extends Phaser.GameObjects.Sprite {
-    constructor(scene, data) {
-        super(scene, 0, 0, data.image);
-        const AU = 149597870700; // 1 AU in meters
+import Entity from './Entity.js';
+import {AU} from '../utils/Constants.js';
 
-        this.screenRadius = this.texture.source[0].width / 2;
+export default class Celestial extends Entity {
+    constructor(scene, type, data) {
+        super(scene, scene.screenToWorld, 0, 0, type, data);
         
         this.position = new Phaser.Math.Vector2(data.position[0] * AU, data.position[1] * AU);
         this.name = data.name;
         this.security = data.security;
 
-        this.addedToOverview = false;
-        this.removeFromOverview = false;
-
-        // Add this object to the scene
-        scene.add.existing(this);
-
         this.setDepth(1);
         this.setScale(0.5);
+
+
     }
+
 
     update() {
 

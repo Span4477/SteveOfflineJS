@@ -20,6 +20,10 @@ export default class SolarSystem {
         this.createGates();
     }
 
+    getAll() {
+        return [this.star, ...this.planets, ...this.warpGates];
+    }
+
     createPlanets() {
         this.systemData.planets.forEach((planetData) => {
             let planet = new Planet(this.scene, planetData);
@@ -45,14 +49,4 @@ export default class SolarSystem {
         this.scene.overview.clear();
     }
 
-    update() {
-        this.planets.forEach((planet) => {
-            planet.update();
-        });
-        this.warpGates.forEach((gate) => {
-            gate.update();
-        });
-        this.star.update();
-
-    }
 }

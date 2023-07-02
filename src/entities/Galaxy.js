@@ -19,6 +19,11 @@ export default class Galaxy {
             }
         }
     }
+
+    getAll() {
+        return this.currentSystem.getAll();
+    }
+
     tryJumpSystem() {
         // check if player is hovering a gate
         let gates = this.currentSystem.warpGates;
@@ -61,8 +66,5 @@ export default class Galaxy {
                 this.scene.player.jumpSystem(landingCoordinates.x, landingCoordinates.y);
             }
         }
-    }
-    update() {
-        this.currentSystem.update();
     }
 }

@@ -4,6 +4,7 @@ export default class Ship extends Entity {
     constructor(scene, screenToWorld, x, y, data) {
         super(scene, screenToWorld, x, y, 'Ship', data);
 
+        this.setScale(0.25);
         // Custom properties for ship
         // e.g., this.speed = 100;
         this.hull = data.maxHull;

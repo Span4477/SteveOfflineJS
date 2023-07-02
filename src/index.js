@@ -5,8 +5,8 @@ import Space from './scenes/Space';
 
 const config = {
     type: Phaser.AUTO,
-    width: 1280,
-    height: 720,
+    width: window.innerWidth * 0.99,
+    height: window.innerHeight * 0.98,
     parent: 'game-container',
     scene: Space,
     backgroundColor: '#000000'

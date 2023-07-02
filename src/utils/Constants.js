@@ -1,0 +1,1 @@
+export const AU = 149597870700; // 1 AU in meters

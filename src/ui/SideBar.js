@@ -3,7 +3,7 @@ import FilterBar from './FilterBar.js';
 
 export default class SideBar extends FilterBar {
     constructor(scene) {
-        super(scene, 0, 0, 25, 200);
+        super(scene, 0, 0, 25, 150);
 
         this.labelTips = ['Inventory', 'Ship', 'Skills', 'Map', 'Journal', 'Settings'];
         this.labels = ['I', 'S', 'K', 'M', 'J', 'O'];

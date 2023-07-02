@@ -22,7 +22,13 @@ export default class Entity extends Phaser.GameObjects.Sprite {
 
         this.addedToOverview = false;
         this.removeFromOverview = false;
-        this.setScale(0.25);
+        
+        this.selected = false;
+        this.selectRadius = 25;
+    }
+
+    select() {
+        this.selected = true;
     }
 
     update() {

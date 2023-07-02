@@ -4,6 +4,8 @@ export default class InputHandler {
     
     constructor(scene) {
         this.scene = scene;
+
+        this.selectedObject = null;
     }
 
     handleKeydown(event) {
@@ -33,6 +35,18 @@ export default class InputHandler {
         const screenY = pointer.y;
         
         const worldPoint = this.scene.screenToWorld.toWorldCoordinates(screenX, screenY);
+
+        let nearestEntity = this.scene.entityManager.getNearestEntity(worldPoint.x, worldPoint.y);
+        if (nearestEntity) {
+            let screenPoint = this.scene.screenToWorld.toScreenCoordinates(nearestEntity.position.x, nearestEntity.position.y);
+            let distance = Phaser.Math.Distance.Between(pointer.x, pointer.y, screenPoint.x, screenPoint.y);
+            if (distance <= nearestEntity.selectRadius) {
+                nearestEntity.select();
+                return;
+            }
+        }
+
+        this.scene.entityManager.unselectAll();
         
         console.log(`Screen coordinates: (${screenX}, ${screenY})`);
         console.log(`Game coordinates: (${worldPoint.x}, ${worldPoint.y})`);
