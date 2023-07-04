@@ -48,6 +48,30 @@ export default class FilterBar {
         return overPanel;
     }
 
+    createLabelBox(x,y,w,h,i) {
+        let labelBox = this.scene.add.rectangle(x,y,w,h);
+        labelBox.setOrigin(0, 0);
+        labelBox.setDepth(this.depth);
+        labelBox.setInteractive({ useHandCursor: true });
+        labelBox.on('pointerover', () => {
+            this.hoverIndex = i;
+        });
+        labelBox.on('pointerout', () => {
+            this.hoverIndex = -1;
+        });
+        labelBox.on('pointerdown', () => {
+            for (let j = 0; j < this.childItems.length; j++) {
+                let obj = this.childItems[j]
+                if (j == i) {
+                    obj.toggle();
+                } else {
+                    obj.hide();
+                }
+            }
+        });
+        return labelBox;
+    }
+
     getLabelBox(index) {
         // if the index is longer than the array, add a new label box
 
@@ -62,26 +86,7 @@ export default class FilterBar {
                 w = this.width / this.labels.length;
                 h = this.height;
             }
-            let labelBox = this.scene.add.rectangle(x,y,w,h);
-            labelBox.setOrigin(0, 0);
-            labelBox.setDepth(this.depth);
-            labelBox.setInteractive({ useHandCursor: true });
-            labelBox.on('pointerover', () => {
-                this.hoverIndex = index;
-            });
-            labelBox.on('pointerout', () => {
-                this.hoverIndex = -1;
-            });
-            labelBox.on('pointerdown', () => {
-                for (let i = 0; i < this.childItems.length; i++) {
-                    let obj = this.childItems[i]
-                    if (i == index) {
-                        obj.toggle();
-                    } else {
-                        obj.hide();
-                    }
-                }
-            });
+            let labelBox = this.createLabelBox(x,y,w,h,index);
             this.labelBoxes.push(labelBox);
             return labelBox;
         } else {
