@@ -80,6 +80,46 @@ export default class Ship extends Entity {
 
         this.shipAngle = - Math.PI / 2;
 
+        this.orbitRadius = 10000;
+        this.orbitEntity = null;
+        this.orbitThreshold = 500;
+    }
+
+    orbit(delta) {
+
+        if (!this.orbitEntity) {
+            return;
+        }
+        
+        let distance = Phaser.Math.Distance.Between(
+            this.position.x, 
+            this.position.y, 
+            this.orbitEntity.position.x, 
+            this.orbitEntity.position.y);
+            
+        if (distance > this.orbitRadius + this.orbitThreshold || distance < this.orbitRadius - this.orbitThreshold) {
+            //accelerate towards orbit radius
+            let approachVector = this.orbitEntity.position.clone();
+            approachVector.subtract(this.position);
+            approachVector.normalize();
+            let goalX = approachVector.x * this.orbitRadius + this.orbitEntity.position.x;
+            let goalY = approachVector.y * this.orbitRadius + this.orbitEntity.position.y;
+            this.approach.x = goalX;
+            this.approach.y = goalY;
+            this.accelerate(delta);
+            return;
+        }
+
+        //rotate around orbit entity
+        let theta = Math.atan2(
+            this.position.y - this.orbitEntity.position.y, 
+            this.position.x - this.orbitEntity.position.x);
+        theta += Math.PI / 8;
+        let goalX = this.orbitRadius * Math.cos(theta) + this.orbitEntity.position.x;
+        let goalY = this.orbitRadius * Math.sin(theta) + this.orbitEntity.position.y;
+        this.approach.x = goalX;
+        this.approach.y = goalY;
+        this.accelerate(delta);
     }
 
     rotateSprite() {
