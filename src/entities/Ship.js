@@ -288,6 +288,10 @@ export default class Ship extends Entity {
 
     velocityFuncInverse(v, vMax) {
         // Returns time in seconds
+        if (v == vMax || vMax == 0) {
+            return 0;
+        }
+        
         return - this.inertiaModifier * Math.log(1 - v / vMax);
     }
 
@@ -362,6 +366,9 @@ export default class Ship extends Entity {
 
     warpSpeedFuncInverse(v) {
         // This is the time to reach velocity v
+        if (v == this.maxSpeed + 1) {
+            return 0;
+        }
         return Math.log(v - this.maxSpeed + 1) / this.warpAgility;
     }
 
@@ -488,8 +495,10 @@ export default class Ship extends Entity {
     accelerate(delta) {
         let t = delta / 1000;  // convert delta from milliseconds to seconds
 
+        if (t == 0) {
+            return;
+        }
 
-        
         // turn the approach vector into a unit vector
         let approachVector = this.approach.clone();
         // point from ship to approach point
