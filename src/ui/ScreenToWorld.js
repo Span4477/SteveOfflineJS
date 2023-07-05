@@ -20,8 +20,6 @@ export default class ScreenToWorld {
         this.maxWorldOffsetX = this.maxWorldWidth / 2;
         this.maxWorldOffsetY = this.maxWorldHeight / 2;
 
-        
-
         this.scaleFactorInput = this.scaleFactor;
         this.worldWidthInput = this.worldWidth;
         this.worldHeightInput = this.worldHeight;
@@ -41,30 +39,6 @@ export default class ScreenToWorld {
         this.scaleFactorInput = Math.min(this.scaleFactorInput * 1.1, this.maxScale);
         this.worldWidthInput = this.scaleFactorInput * this.screenWidth;
         this.worldHeightInput = this.scaleFactorInput * this.screenHeight;
-    }
-
-    getBackToScreen(radius, screenRadius) {
-        return screenRadius / radius;
-    }
-
-    getBackToFront(radius, screenRadius) {
-
-        let backToScreen = this.getBackToScreen(radius, screenRadius);
-        let screenToFront = this.worldWidth / this.screenWidth;
-        let backToFront = backToScreen * screenToFront;
-        return 1 / backToFront;
-
-    }
-
-    backgroundToScreen(worldX, worldY, radius, screenRadius) {
-        // Things that are far away in the distance should move slower than things that are close
-        let frontToBack = this.getBackToFront(radius, screenRadius);
-        let backToScreen = this.getBackToScreen(radius, screenRadius);
-
-        let screenX = (worldX - this.worldWidth / 2 * frontToBack + (this.worldWidth / 2 - this.worldOffsetX)) * backToScreen + this.screenWidth;
-        let screenY = (worldY - this.worldHeight / 2 * frontToBack + (this.worldHeight / 2 - this.worldOffsetY)) * backToScreen + this.screenHeight;
-        
-        return {x: screenX, y: screenY};
     }
 
     toScreenCoordinates(worldX, worldY) {
@@ -91,6 +65,11 @@ export default class ScreenToWorld {
 
     centerOnPlayer(playerX, playerY) {
         // Center the screen on the player
+
+        // ensure the player coords are not null
+        if (!playerX || !playerY) {
+            return;
+        }
 
         this.worldOffsetX = playerX + this.screenWidth * this.scaleFactor / 2;
         this.worldOffsetY = playerY + this.screenHeight * this.scaleFactor / 2;
