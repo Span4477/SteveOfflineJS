@@ -162,6 +162,7 @@ export default class FilterBar {
             let obj = this.childItems[i];
             if (obj.visible) {
                 visibleChildIndex = i;
+                break;
             }
         }
 

@@ -4,6 +4,7 @@ import FilterBar from './FilterBar.js';
 export default class TargetBar extends FilterBar {
     constructor(scene) {
         super(scene, scene.game.config.width - 125, 0, 125, 25);
+        this.entityManager = this.scene.entityManager;
 
         this.labelTips = [
             'Interact',
@@ -23,7 +24,7 @@ export default class TargetBar extends FilterBar {
     }
 
     getTarget() {
-        let entities = this.scene.entityManager.entities;
+        let entities = this.entityManager.entities;
         for (let i = 0; i < entities.length; i++) {
             let entity = entities[i];
             if (entity.selected) {
