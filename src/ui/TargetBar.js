@@ -1,5 +1,6 @@
 
 import FilterBar from './FilterBar.js';
+import TargetPanel from './TargetPanel.js';
 
 export default class TargetBar extends FilterBar {
     constructor(scene) {
@@ -20,7 +21,7 @@ export default class TargetBar extends FilterBar {
             'K',
             '?'
         ];
-
+        this.panel = new TargetPanel(scene);
     }
 
     getTarget() {

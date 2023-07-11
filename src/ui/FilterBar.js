@@ -110,7 +110,7 @@ export default class FilterBar {
                 this.labelFont
             );
             labelText.setOrigin(0.5, 0.5);
-            labelText.setDepth(this.depth);
+            labelText.setDepth(this.depth + 1);
             this.labelTexts.push(labelText);
             return labelText;
         } else {
@@ -133,24 +133,27 @@ export default class FilterBar {
         let hoverTextWidth = this.hoverText.width;
         let hoverTextHeight = this.hoverText.height;
         this.graphics.fillStyle(colors.backgroundDark, 0.8);
-        this.graphics.fillRect(
+        let rect = this.graphics.fillRect(
             this.hoverText.x - 5,
             this.hoverText.y - hoverTextHeight / 2 - 5,
             hoverTextWidth + 10,
             hoverTextHeight + 10
         );
+        rect.setDepth(this.depth + 1);
     }
 
     drawInvertedLabel(labelBox, labelText) {
 
         this.graphics.fillStyle(colors.backgroundLight, 1);
-        this.graphics.fillRect(labelBox.x, labelBox.y, labelBox.width, labelBox.height);
+        let rect = this.graphics.fillRect(labelBox.x, labelBox.y, labelBox.width, labelBox.height);
+        rect.setDepth(this.depth);
         labelText.setColor(colors.textDark2);
     }
 
     drawNormalLabel(labelBox, labelText) {
         this.graphics.fillStyle(colors.backgroundDark, 1);
-        this.graphics.fillRect(labelBox.x, labelBox.y, labelBox.width, labelBox.height);
+        let rect = this.graphics.fillRect(labelBox.x, labelBox.y, labelBox.width, labelBox.height);
+        rect.setDepth(this.depth);
         labelText.setColor(colors.textLight2);
     }
 
@@ -171,7 +174,7 @@ export default class FilterBar {
             let labelBox = this.getLabelBox(i);
             let labelText = this.getLabel(i);
             // Draw a box for the label
-            if (i == this.hoverIndex && visibleChildIndex == -1) {
+            if (i == this.hoverIndex) {
                 this.drawInvertedLabel(labelBox, labelText);
                 this.drawHoverLabel(labelBox, i);
             } else if (visibleChildIndex == i || i == this.hoverIndex) {
@@ -188,13 +191,7 @@ export default class FilterBar {
         if (this.hoverIndex == -1) {
             this.hoverText.setText('');
         }
-        // Don't show hover text if any child item is visible.
-        for (let i = 0; i < this.childItems.length; i++) {
-            let obj = this.childItems[i]
-            if (obj.visible) {
-                this.hoverText.setText('');
-            }
-        }
+        
 
     }
 
